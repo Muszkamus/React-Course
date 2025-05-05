@@ -142,70 +142,9 @@ function getBooks() {
 function getBook(id) {
   return data.find((data) => data.id === id);
 }
+// ------------- The Array map Method
 
-// ---------- Simple destructuring objects
-const book = getBook(3); //Choose the object
+const books = getBooks();
 
-const { title, author, pages, publicationDate, genres, hasMovieAdaptation } =
-  book; // On the left, we choose the objects within the object
-
-console.log(title, author, pages, publicationDate, genres, hasMovieAdaptation);
-
-// Simple destructuring arrays
-
-// const [primaryGenre, secondaryGenre] = genres;
-// console.log(primaryGenre, secondaryGenre);
-
-///
-
-//------- Rest Operator
-const [primaryGenre, secondaryGenre, ...otherGenres] = genres; // Always at the end, choosing the rest of the arguments/data
-console.log(otherGenres);
-
-// ---- Spread operator
-const newGenres = [...genres, "new added epic fantasy"]; // This simplt spreads genres, making everything equal
-console.log(newGenres);
-
-const updateBook = {
-  ...book,
-  // Adding new property
-  moviePublicationDate: "2001-12-19",
-  //Changing existing property
-  pages: 1210,
-};
-updateBook;
-
-pages > 1000 ? "Over a thousand pages" : "Less than a thousand pages";
-
-// ----------- # 23. **Short-Circuiting And Logical Operators: &&, ||, ??**
-
-// falsy: 0, null, "",undefined
-
-// Short circuting (if the value is true)
-console.log(true && "some value");
-console.log(false && "some value");
-console.log(hasMovieAdaptation && "This book has a movie");
-
-// Or (if the value is false)
-console.log(true || "some string"); // true
-console.log(false || "some string"); // some string
-
-// const spanishTranslation =
-//   book.translations.spanish || "Not translated in spanish";
-// console.log(spanishTranslation);
-
-// // This one throws aways any falsy value as the argument we give
-// console.log(book.reviews.librarything.reviewsCount);
-// const countWrong = book.reviews.librarything.reviewsCount || "No Data";
-// countWrong; // No data
-// // This one only accepts null or undefined
-// const count = book.reviews.librarything.reviewsCount ?? "No data";
-
-// ---------- Optional Chaining
-function getTotalReviewCount(book) {
-  const goodreads = book.reviews.goodreads.reviewsCount;
-  const librarything = book.reviews.librarything?.reviewsCount ?? 0; // If anything after question mark is non existent, we swap it with whats after ??
-  return goodreads + librarything;
-}
-
-console.log(getTotalReviewCount(book));
+const x = [1, 2, 3, 4, 5].map((el) => el * 2);
+console.log(x);
