@@ -190,3 +190,24 @@ function getTotalReviewCount(book) {
 
 console.log(getTotalReviewCount(book));
 ```
+
+---
+
+# 25. **The Array map Method**
+
+---
+
+```js
+const x = [1, 2, 3, 4, 5].map((el) => el * 2);
+
+const titles = books.map((book) => book.title); // map is basically loop, but for objects
+
+const essentialData = books.map((book) => ({
+  // Here we can go through the whole object, and pick what we want from the ID which is specific name
+
+  title: book.title, // Name of what we want to print > whatever we want to print
+  author: book.author,
+  reviewsCount: getTotalReviewCount(book),
+}));
+essentialData;
+```
