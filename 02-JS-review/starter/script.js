@@ -142,6 +142,7 @@ function getBooks() {
 function getBook(id) {
   return data.find((data) => data.id === id);
 }
+/*
 // ------------- The Array map Method
 
 const books = getBooks();
@@ -164,3 +165,85 @@ const essentialData = books.map((book) => ({
   reviewsCount: getTotalReviewCount(book),
 }));
 essentialData;
+
+// First is to choose argument, then where we get it from and lastly, condition. It needs to be true
+const longBooksWithMovie = books
+  .filter((book) => book.pages > 500) // && can be used as well
+  .filter((book) => book.hasMovieAdaptation);
+// Very similar to map, but this one is quicker with if statement included
+
+console.log(longBooksWithMovie);
+
+const adventureBooks = books
+  .filter((books) => books.genres.includes("adventure"))
+  .map((book) => book.title); // chose to only show titles
+console.log(adventureBooks);
+
+// ------------ 27. The Array reduce Method
+
+// Acc is cumulator of the value
+const pagesAllBooks = books.reduce((sum, book) => sum + book.pages, 0); // Reduce always gives only one value. We need accumulator, and then function
+
+pagesAllBooks;
+
+// ---------- 28. The Array sort Method
+
+// Mutated
+
+const arr = [9, 2, 7, 4, 2];
+const sorted = arr.sort((a, b) => a - b); //JS goes through the array, it calls this function, if it is -: Ascending
+sorted;
+arr; // Sort function mutated original array
+
+// Not mutated
+
+const arr2 = [9, 2, 7, 4, 2];
+const sorted2 = arr.slice().sort((a, b) => a - b); //JS goes through the array, it calls this function, if it is -: Ascending
+sorted2;
+arr2; // Not mutated due to slice function that does nothing, but makes JS not mutate original array
+
+const sortedPages = books.slice().sort((a, b) => a.pages - b.pages);
+sortedPages;
+
+/// 29. Working With Immutable Arrays
+
+// 1) Add book object to array
+
+const newBook = {
+  id: 6,
+  title: "Harry Potter and Wizards of Harry",
+  author: "J. K. Rowling",
+};
+const booksAfterAdd = [...books, newBook]; // Spread operator and add extra object in the array
+
+// 2) Delete book object from array
+
+const booksAfterDelete = booksAfterAdd.filter((book) => book.id !== 3); // only include books whose id is not 3
+booksAfterDelete;
+
+// 3) Update book object in the array
+
+const booksAfterUpdate = booksAfterDelete.map(
+  (book) => (book.id === 1 ? { ...book, pages: 1 } : book) // Basically loops through the book, checks for book id 2, if if exists then spread this book component,
+  // changes pages:1 (because it already exists). Anything other than that, keep the book as it is.
+);
+booksAfterUpdate;
+*/
+
+// --------- 30. Asynchronous JavaScript: Promises
+
+// fetch("https://jsonplaceholder.typicode.com/todos/1")
+//   .then((response) => response.json())
+//   .then((data) => console.log(data));
+
+// console.log("Rad");
+
+// 31. Asynchronous JavaScript: Async/Await ( Better)
+async function getTodos() {
+  // Makes the code asynchronous
+  const res = await fetch("https://jsonplaceholder.typicode.com/todos/1"); // Fetching API
+  const data = await res.json(); // Stores json in the variable
+  console.log(data);
+}
+
+getTodos();
