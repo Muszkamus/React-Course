@@ -334,3 +334,34 @@ getTodos();
 # <centre> **Section 5: Working With Components, Props, and JSX**
 
 ---
+
+# 33. **Rendering the Root Component and Strict Mode**
+
+---
+
+First > Create React App
+
+// Index.js needs to be created and is the most important file to run inside src folder. It needs to be called like this
+
+**npx create-react-app my-app
+cd my-app
+npm start**
+
+Index.js folder below needs to be like this in order for React to run
+
+```js
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+function App() {
+  // Always upper case
+  return <h1>Hello React</h1>;
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root")); // Root is in main html so this is a link
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+); // Run React
+```
