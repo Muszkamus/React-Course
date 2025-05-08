@@ -52,6 +52,7 @@ function App() {
     <div>
       <h1>Hello React</h1>
       <Pizza />
+      <Pizza /> {/* This is easily copied */}
     </div>
   );
 }
@@ -60,6 +61,7 @@ function App() {
 function Pizza() {
   return (
     <div>
+      <img src="/pizzas/spinaci.jpg" alt="Pizza spinaci" />
       <h2>Pizza Spinaci</h2>
       <p>"Tomato, mozarella, spinach, and ricotta cheese"</p>
     </div>
