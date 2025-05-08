@@ -365,3 +365,21 @@ root.render(
   </React.StrictMode>
 ); // Run React
 ```
+
+---
+
+# 35. **Components as building blocks**
+
+---
+
+- They are the most fundamental parts of React.
+- React applications are entirely made out of components.
+- Building blocks of user interfaces in React
+- Piece of UI that has its own data, logic and appearance.
+- Components can be reused, nested inside each other and pass data between them
+
+---
+
+# 36. **Creating And Reusing a Component**
+
+---
