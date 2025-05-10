@@ -616,3 +616,33 @@ function Header() {
 
 - Vanilla JS > One technilogy per file (HTML,CSS,JS)
 - React > One component per file (Header, Filter, Menu etc.)
+
+---
+
+# 41. **Styling React Applications**
+
+---
+
+```js
+function App() {
+  // Always upper case
+  return (
+    <div className="container">
+      {/* Always use className and then refer to CSS styling*/}
+      <Header /> {/*Components*/}
+      <Menu />
+      <Footer />
+    </div>
+  );
+}
+
+function Header() {
+  // const style = { color: "red", fontSize: "40px", texttransform: "uppercase" }; // This one is easy but messy for later use
+  const style = {};
+  return (
+    <header className="header">
+      <h1 style={style}>Fast React Pizza Co.</h1>
+    </header>
+  );
+}
+```
