@@ -50,11 +50,36 @@ function App() {
   // Always upper case
   return (
     <div>
-      <h1>Hello React</h1>
-      <Pizza />
-      <Pizza /> {/* This is easily copied */}
+      <Header /> {/*Components*/}
+      <Menu />
+      <Footer />
     </div>
   );
+}
+
+function Header() {
+  const hour = new Date().getHours();
+  const openHour = 12;
+  const closeHour = 22;
+
+  const isOpen = hour >= openHour && hour < closeHour; // This will set Boolean value
+  console.log(isOpen);
+
+  return <h1>Fast React Pizza Co.</h1>;
+}
+function Menu() {
+  return (
+    <div>
+      <h2>Our Menu</h2>
+      <Pizza />
+    </div>
+  );
+}
+function Footer() {
+  return (
+    <footer>{new Date().toLocaleTimeString()}. We're currently open</footer>
+  );
+  // return React.createElement("footer", null, "We're currently open");
 }
 
 // Components are always functions, always capital letter. Always on top, never nested (inside eachother)

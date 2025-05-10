@@ -468,3 +468,151 @@ root.render(
 # 37. **What is JSX?**
 
 ---
+
+- Declarative Syntax to describe what components look like and how they work
+- components must return a block of JSX
+- Extension of JS that allows us to embed JavaScript, CSS and React components into HTML
+- Each JSX element is converted to a React.createelement function call
+- We could use React without JSC (not fun)
+
+- **JSX is Declarative**
+
+**Imperative> Vanilla** JS with get element ID or query selector
+
+- Manual DOM element sections and DOM traversing
+- Step by step DOM mutations until we reach the desired UI
+
+- **Declarative**
+- Describe what UI should look like using JSX, based on current data
+- React is an abstraction away from DOM: we never touch the DOM
+
+---
+
+# 38. **Creating More Components**
+
+---
+
+```js
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+const pizzaData = [
+  {
+    name: "Focaccia",
+    ingredients: "Bread with italian olive oil and rosemary",
+    price: 6,
+    photoName: "pizzas/focaccia.jpg",
+    soldOut: false,
+  },
+  {
+    name: "Pizza Margherita",
+    ingredients: "Tomato and mozarella",
+    price: 10,
+    photoName: "pizzas/margherita.jpg",
+    soldOut: false,
+  },
+  {
+    name: "Pizza Spinaci",
+    ingredients: "Tomato, mozarella, spinach, and ricotta cheese",
+    price: 12,
+    photoName: "pizzas/spinaci.jpg",
+    soldOut: false,
+  },
+  {
+    name: "Pizza Funghi",
+    ingredients: "Tomato, mozarella, mushrooms, and onion",
+    price: 12,
+    photoName: "pizzas/funghi.jpg",
+    soldOut: false,
+  },
+  {
+    name: "Pizza Salamino",
+    ingredients: "Tomato, mozarella, and pepperoni",
+    price: 15,
+    photoName: "pizzas/salamino.jpg",
+    soldOut: true,
+  },
+  {
+    name: "Pizza Prosciutto",
+    ingredients: "Tomato, mozarella, ham, aragula, and burrata cheese",
+    price: 18,
+    photoName: "pizzas/prosciutto.jpg",
+    soldOut: false,
+  },
+];
+
+function App() {
+  // Always upper case
+  return (
+    <div>
+      <Header /> {/*Components*/}
+      <Menu />
+      <Footer />
+    </div>
+  );
+}
+
+function Header() {
+  return <h1>Fast React Pizza Co.</h1>;
+}
+function Menu() {
+  return (
+    <div>
+      <h2>Our Menu</h2>
+      <Pizza />
+    </div>
+  );
+}
+function Footer() {
+  return (
+    <footer>{new Date().toLocaleTimeString()}. We're currently open</footer>
+  );
+  // return React.createElement("footer", null, "We're currently open");
+}
+
+// Components are always functions, always capital letter. Always on top, never nested (inside eachother)
+function Pizza() {
+  return (
+    <div>
+      <img src="/pizzas/spinaci.jpg" alt="Pizza spinaci" />
+      <h2>Pizza Spinaci</h2>
+      <p>"Tomato, mozarella, spinach, and ricotta cheese"</p>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root")); // Root is html so this is a link
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+); // Run React
+```
+
+---
+
+# 39. **JavaScript Logic in Components**
+
+---
+
+```js
+function Header() {
+  const hour = new Date().getHours();
+  const openHour = 12;
+  const closeHour = 22;
+
+  const isOpen = hour >= openHour && hour < closeHour; // This will set Boolean value
+  console.log(isOpen);
+
+  return <h1>Fast React Pizza Co.</h1>;
+}
+```
+
+---
+
+# 40. **Seperation of concerns**
+
+---
+
+- Vanilla JS > One technilogy per file (HTML,CSS,JS)
+- React > One component per file (Header, Filter, Menu etc.)
