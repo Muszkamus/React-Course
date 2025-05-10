@@ -57,6 +57,7 @@ function App() {
     </div>
   );
 }
+// Components are always functions, always capital letter. Always on top, never nested (inside eachother)
 
 function Header() {
   // const style = { color: "red", fontSize: "40px", texttransform: "uppercase" };
@@ -71,7 +72,34 @@ function Menu() {
   return (
     <div className="menu">
       <h2>Our Menu</h2>
-      <Pizza />
+      <Pizza
+        name="Pizza Spinaci"
+        ingredients="Tomato, mozarella, spinach, and ricotta cheese"
+        photoName="/pizzas/spinaci.jpg"
+        price={10}
+      />
+      <Pizza
+        name="Pizza Funghi"
+        ingredients="Tomato, mushrooms"
+        price={10}
+        photoName="pizzas/funghi.jpg"
+      />
+    </div>
+  );
+}
+
+function Pizza(props) {
+  //props will appear because we have used it above, meaning they are connected
+  console.log(props);
+  return (
+    <div className="pizza">
+      <img src={props.photoName} alt={props.name} />
+      <div>
+        {" "}
+        <h3>{props.name}</h3>
+        <p>{props.ingredients}</p>
+        <span>{props.price}</span>
+      </div>
     </div>
   );
 }
@@ -81,24 +109,13 @@ function Footer() {
   const closeHour = 22;
 
   const isOpen = hour >= openHour && hour < closeHour; // This will set Boolean value
-  console.log(isOpen);
+
   return (
     <footer className="footer">
-      {new Date().toLocaleTimeString()}. We're currently open
+      {isOpen === true ? "We're open" : "We're closed"}
     </footer>
   );
   // return React.createElement("footer", null, "We're currently open");
-}
-
-// Components are always functions, always capital letter. Always on top, never nested (inside eachother)
-function Pizza() {
-  return (
-    <div>
-      <img src="/pizzas/spinaci.jpg" alt="Pizza spinaci" />
-      <h3>Pizza Spinaci</h3>
-      <p>"Tomato, mozarella, spinach, and ricotta cheese"</p>
-    </div>
-  );
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root")); // Root is html so this is a link

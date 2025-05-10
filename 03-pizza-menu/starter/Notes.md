@@ -639,10 +639,69 @@ function App() {
 function Header() {
   // const style = { color: "red", fontSize: "40px", texttransform: "uppercase" }; // This one is easy but messy for later use
   const style = {};
+  b;
   return (
     <header className="header">
       <h1 style={style}>Fast React Pizza Co.</h1>
     </header>
   );
+}
+```
+
+---
+
+# 42. **Passing and Receiving Props**
+
+---
+
+```js
+function Menu() {
+  return (
+    <div className="menu">
+      <h2>Our Menu</h2>
+      <Pizza
+        name="Pizza Spinaci"
+        ingredients="Tomato, mozarella, spinach, and ricotta cheese"
+        photoName="/pizzas/spinaci.jpg"
+        price={10}
+      />
+      <Pizza
+        name="Pizza Funghi"
+        ingredients="Tomato, mushrooms"
+        price={10}
+        photoName="pizzas/funghi.jpg"
+      />
+    </div>
+  );
+}
+
+function Pizza(props) {
+  //props will appear because we have used it above, meaning they are connected
+  console.log(props);
+  return (
+    <div className="pizza">
+      <img src={props.photoName} alt={props.name} />
+      <div>
+        {" "}
+        <h3>{props.name}</h3>
+        <p>{props.ingredients}</p>
+        <span>{props.price}</span>
+      </div>
+    </div>
+  );
+}
+function Footer() {
+  const hour = new Date().getHours();
+  const openHour = 12;
+  const closeHour = 22;
+
+  const isOpen = hour >= openHour && hour < closeHour; // This will set Boolean value
+
+  return (
+    <footer className="footer">
+      {isOpen === true ? "We're open" : "We're closed"}
+    </footer>
+  );
+  // return React.createElement("footer", null, "We're currently open");
 }
 ```
