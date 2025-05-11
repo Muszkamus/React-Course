@@ -705,3 +705,23 @@ function Footer() {
   // return React.createElement("footer", null, "We're currently open");
 }
 ```
+
+---
+
+# 43. **Props, Immutability, and One-Way data flow**
+
+---
+
+- Props are used to pass data from parent componens to child components (down the component tree)
+- Essential tool to configure and customize components (like function parameters)
+- With props, parent components control how child components look and work
+- Anything can be passed as props, single values, arrays, objects, functions and even other components.
+
+## Props are immutable, while states are
+
+- React uses one way data flow from Parent to child
+- One way data flow is more performant, makes apps easier to debug and makes it predicatble.
+
+---
+
+# 44. Challenge. Profile card
