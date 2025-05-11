@@ -1,0 +1,44 @@
+.main {
+  background-color: darkgray;
+}
+
+.mainBox {
+  width: 400px;
+  height: 500px;
+  margin: 10px;
+  border: 2px solid black;
+}
+
+.picture {
+  background-color: darkgray;
+  height: 150px;
+}
+
+.title {
+  height: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 34px;
+}
+
+.description {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+}
+
+.skillset {
+  background-color: aqua;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 176px;
+}
+
+.skills {
+}
