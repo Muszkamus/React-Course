@@ -68,51 +68,51 @@ function Header() {
   );
 }
 function Menu() {
+  const pizzas = pizzaData;
+  const numPizzas = pizzas.length;
   return (
-    <div className="menu">
+    <main className="menu">
       <h2>Our Menu</h2>
-      <Pizza
-        name="Pizza Spinaci"
-        ingredients="Tomato, mozarella, spinach, and ricotta cheese"
-        photoName="/pizzas/spinaci.jpg"
-        price={10}
-      />
-      <Pizza
-        name="Pizza Funghi"
-        ingredients="Tomato, mushrooms"
-        price={10}
-        photoName="pizzas/funghi.jpg"
-      />
-    </div>
+      {numPizzas > 0 ? (
+        <ul className="pizzas">
+          {pizzas.map((pizza) => (
+            <Pizza pizzaObj={pizza} key={pizza.name} />
+          ))}
+        </ul>
+      ) : (
+        <p>We are working on our menu</p>
+      )}
+    </main>
   );
 }
 
 function Pizza(props) {
   //props will appear because we have used it above, meaning they are connected
-  console.log(props);
   return (
-    <div className="pizza">
-      <img src={props.photoName} alt={props.name} />
+    <li className="pizza">
+      <img src={props.pizzaObj.photoName} alt={props.pizzaObj.name} />
       <div>
         {" "}
-        <h3>{props.name}</h3>
-        <p>{props.ingredients}</p>
-        <span>{props.price}</span>
+        <h3>{props.pizzaObj.name}</h3>
+        <p>{props.pizzaObj.ingredients}</p>
+        <span>{props.pizzaObj.price}</span>
       </div>
-    </div>
+    </li>
   );
 }
 
 function Footer() {
   const hour = new Date().getHours();
   const openHour = 12;
-  const closeHour = 22;
+  const closeHour = 20;
 
   const isOpen = hour >= openHour && hour < closeHour; // This will set Boolean value
 
   return (
     <footer className="footer">
-      {isOpen === true ? "We're open" : "We're closed"}
+      {isOpen === true
+        ? `We're currently open until ${closeHour}`
+        : `We're currently closed, we will open at ${openHour}`}
     </footer>
   );
   // return React.createElement("footer", null, "We're currently open");

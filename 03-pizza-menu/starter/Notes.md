@@ -725,3 +725,80 @@ function Footer() {
 ---
 
 # 44. Challenge. Profile card
+
+DONE
+
+---
+
+# 45. **The Rules of JSX**
+
+---
+
+## **General JSX Rules**
+
+- JSC works essentially like HTML, but we can enter "JS mode" by using {}
+- We can place JS expressions inside {}. Examples: reference variables, create arrays or objects, [].map(), ternary operator
+- Statements are not allowed (if/else. for, switch)
+- JSX produces a JavaScript expression
+
+---
+
+# 46. **Rendering lists**
+
+---
+
+```js
+// This code maps over the pizzaData array.
+// For each pizza object, it renders a <Pizza /> component.
+// It passes the pizza object as a prop named pizzaObj.
+// A unique key (here, the pizza name) is used to help React track items in the list.
+<ul className="pizzas">
+  {pizzaData.map((pizza) => (
+    <Pizza pizzaObj={pizza} key={pizza.name} />
+  ))}
+</ul>
+```
+
+```js
+// This functional component receives a pizzaObj via props.
+// It displays the pizza's image, name, ingredients, and price.
+function Pizza(props) {
+  //props will appear because we have used it above, meaning they are connected
+  return (
+    <li className="pizza">
+      <img src={props.pizzaObj.photoName} alt={props.pizzaObj.name} />
+      <div>
+        {" "}
+        <h3>{props.pizzaObj.name}</h3>
+        <p>{props.pizzaObj.ingredients}</p>
+        <span>{props.pizzaObj.price}</span>
+      </div>
+    </li>
+  );
+}
+```
+
+---
+
+# 47. **Conditional Rendering With &&**
+
+```js
+function Menu() {
+  const pizzas = pizzaData;
+  const numPizzas = pizzas.length;
+  return (
+    <main className="menu">
+      <h2>Our Menu</h2>
+      {numPizzas > 0 ? (
+        <ul className="pizzas">
+          {pizzas.map((pizza) => (
+            <Pizza pizzaObj={pizza} key={pizza.name} />
+          ))}
+        </ul>
+      ) : (
+        <p>We are working on our menu</p>
+      )}
+    </main>
+  );
+}
+```
