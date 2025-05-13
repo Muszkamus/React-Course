@@ -99,3 +99,33 @@ h1 {
 ```
 
 ---
+
+## CORE FEATURES
+
+---
+
+✅ align-content only matters when you have multiple rows (i.e. flex-wrap: wrap;)
+
+```js
+display: flex;              /* enable flexbox */
+flex-direction: row;        /* direction of items (row/column) */
+flex-wrap: wrap;            /* allow wrapping to next line */
+justify-content: center;    /* align items horizontally */
+align-items: center;        /* align items vertically */
+align-content: center;      /* align wrapped rows (only with flex-wrap) */
+
+```
+
+```js
+🔹 Flex Item (child)
+
+flex-grow: 1; /_ item grows to fill space _/
+flex-shrink: 1; /_ item shrinks if needed _/
+flex-basis: 200px; /_ base size before grow/shrink _/
+flex: 1; /_ shorthand: grow shrink basis _/
+
+align-self: flex-end; /_ override container's align-items _/
+order: 2; /_ change item order _/
+```
+
+---
