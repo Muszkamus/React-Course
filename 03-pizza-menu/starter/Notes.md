@@ -802,3 +802,103 @@ function Menu() {
   );
 }
 ```
+
+---
+
+# 51. **Destructuring Objects**
+
+```js
+function Footer() {
+  const hour = new Date().getHours();
+  const openHour = 12;
+  const closeHour = 23;
+
+  const isOpen = hour >= openHour && hour < closeHour; // This will set Boolean value
+
+  // Conditional Rendering with Multiple returns
+
+  return (
+    <footer className="footer">
+      {isOpen === true ? (
+        <Order closeHour={closeHour} openHour={openHour} />
+      ) : (
+        `We're currently closed, we will open at ${openHour}`
+      )}
+    </footer>
+  );
+  // return React.createElement("footer", null, "We're currently open");
+}
+
+function Order({ closeHour, openHour }) {
+  // this is new props method that takes info from the above,
+  // Props are read-only: Order uses them but does not modify them.
+  // Props can be any data type: Here, both closeHour and openHour are numbers.
+  // Parent → Child direction: Props flow one way — Footer (parent) gives data to Order (child).
+  // Destructuring makes code cleaner: Instead of props.openHour, you just use openHour.
+  return (
+    <div className="order">
+      <p>
+        We're open from {openHour} until {closeHour}:00. Come visit us or order
+        online
+      </p>
+      <button className="btn">order</button>
+    </div>
+  );
+}
+```
+
+---
+
+# 52. **React Fragment**
+
+```js
+function Menu() {
+  const pizzas = pizzaData;
+  const numPizzas = pizzas.length;
+  return (
+    <main className="menu">
+      <h2>Our Menu</h2>
+
+      {numPizzas > 0 ? (
+        <>
+          {/*          Instead of putting it in the div, use empty curling braces to do
+          fragment and group things together as JSX only allows one element
+          Basically, we have <p> and <ul> in the same format */}
+          <p>Authentic Italian Cousine</p>
+          <ul className="pizzas">
+            {pizzas.map((pizza) => (
+              <Pizza pizzaObj={pizza} key={pizza.name} />
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p>We are working on our menu</p>
+      )}
+    </main>
+  );
+}
+```
+
+---
+
+# 53. **Setting Classes and Text Conditionally**
+
+---
+
+```js
+function Pizza({ pizzaObj }) {
+  //props will appear because we have used it above, meaning they are connected
+  return (
+    // This here is very similar, ternary operator for css styling
+    <li className={`pizza ${pizzaObj.soldOut ? "sold-out" : ""}`}>
+      <img src={pizzaObj.photoName} alt={pizzaObj.name} />
+      <div>
+        {" "}
+        <h3>{pizzaObj.name}</h3>
+        <p>{pizzaObj.ingredients}</p>
+        <span>{pizzaObj.soldOut ? "Sold Out" : pizzaObj.price}</span> {/*  Setting text conditionally */}
+      </div>
+    </li>
+  );
+}
+```

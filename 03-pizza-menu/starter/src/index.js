@@ -73,12 +73,18 @@ function Menu() {
   return (
     <main className="menu">
       <h2>Our Menu</h2>
+
       {numPizzas > 0 ? (
-        <ul className="pizzas">
-          {pizzas.map((pizza) => (
-            <Pizza pizzaObj={pizza} key={pizza.name} />
-          ))}
-        </ul>
+        <>
+          {/*          Instead of putting it in the div, use empty curling braces to do
+          fragment and group things together as JSX only allows one element*/}
+          <p>Authentic Italian Cousine</p>
+          <ul className="pizzas">
+            {pizzas.map((pizza) => (
+              <Pizza pizzaObj={pizza} key={pizza.name} />
+            ))}
+          </ul>
+        </>
       ) : (
         <p>We are working on our menu</p>
       )}
@@ -86,17 +92,18 @@ function Menu() {
   );
 }
 
-function Pizza(props) {
-  if (props.pizzaObj.soldOut) return null;
+function Pizza({ pizzaObj }) {
   //props will appear because we have used it above, meaning they are connected
   return (
-    <li className="pizza">
-      <img src={props.pizzaObj.photoName} alt={props.pizzaObj.name} />
+    // This here is very similar, ternary operator for css styling
+    <li className={`pizza ${pizzaObj.soldOut ? "sold-out" : ""}`}>
+      <img src={pizzaObj.photoName} alt={pizzaObj.name} />
       <div>
         {" "}
-        <h3>{props.pizzaObj.name}</h3>
-        <p>{props.pizzaObj.ingredients}</p>
-        <span>{props.pizzaObj.price}</span>
+        <h3>{pizzaObj.name}</h3>
+        <p>{pizzaObj.ingredients}</p>
+        <span>{pizzaObj.soldOut ? "Sold Out" : pizzaObj.price}</span>{" "}
+        {/*  Setting text conditionally */}
       </div>
     </li>
   );
@@ -114,7 +121,7 @@ function Footer() {
   return (
     <footer className="footer">
       {isOpen === true ? (
-        <Order closeHour={closeHour} />
+        <Order closeHour={closeHour} openHour={openHour} />
       ) : (
         `We're currently closed, we will open at ${openHour}`
       )}
@@ -123,11 +130,13 @@ function Footer() {
   // return React.createElement("footer", null, "We're currently open");
 }
 
-function Order(props) {
+function Order({ closeHour, openHour }) {
+  // this is new props method that takes info from the above,
   return (
     <div className="order">
       <p>
-        We're open until {props.closeHour}:00. Come visit us or order online
+        We're open from {openHour} until {closeHour}:00. Come visit us or order
+        online
       </p>
       <button className="btn">order</button>
     </div>
