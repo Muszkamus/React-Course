@@ -87,6 +87,7 @@ function Menu() {
 }
 
 function Pizza(props) {
+  if (props.pizzaObj.soldOut) return null;
   //props will appear because we have used it above, meaning they are connected
   return (
     <li className="pizza">
@@ -104,18 +105,33 @@ function Pizza(props) {
 function Footer() {
   const hour = new Date().getHours();
   const openHour = 12;
-  const closeHour = 20;
+  const closeHour = 23;
 
   const isOpen = hour >= openHour && hour < closeHour; // This will set Boolean value
 
+  // Conditional Rendering with Multiple returns
+
   return (
     <footer className="footer">
-      {isOpen === true
-        ? `We're currently open until ${closeHour}`
-        : `We're currently closed, we will open at ${openHour}`}
+      {isOpen === true ? (
+        <Order closeHour={closeHour} />
+      ) : (
+        `We're currently closed, we will open at ${openHour}`
+      )}
     </footer>
   );
   // return React.createElement("footer", null, "We're currently open");
+}
+
+function Order(props) {
+  return (
+    <div className="order">
+      <p>
+        We're open until {props.closeHour}:00. Come visit us or order online
+      </p>
+      <button className="btn">order</button>
+    </div>
+  );
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root")); // Root is html so this is a link
