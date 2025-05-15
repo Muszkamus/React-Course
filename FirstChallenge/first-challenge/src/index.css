@@ -53,7 +53,7 @@
   font-size: 15px;
   background-color: bisque;
   margin: 10px;
-  padding: 1px 10px; /* button padding */
+  padding: 1px 5px; /* button padding */
   border: 2px solid rgb(121, 121, 121);
   border-radius: 20px;
 }

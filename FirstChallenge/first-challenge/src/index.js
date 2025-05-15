@@ -3,13 +3,13 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 
 const skills = [
-  "JavaScript",
-  "HTML",
-  "CSS",
-  "React",
-  " BackEnd",
-  "FrontEnd",
-  "Quantum physics",
+  { name: "JavaScript", level: "advanced", color: "blue" },
+  { name: "HTML", level: "intermediate", color: "beige" },
+  { name: "CSS", level: "advanced", color: "yellow" },
+  { name: "React", level: "intermediate", color: "red" },
+  { name: " BackEnd", level: "beginner", color: "white" },
+  { name: "FrontEnd", level: "intermediate", color: "brown" },
+  { name: "Quantum physics", level: "beginner", color: "green" },
 ];
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -42,17 +42,20 @@ function MainBox() {
 function SkillSet() {
   return (
     <div className="skillset">
-      {skills.map((n) => (
-        <Skill name={n} />
+      {skills.map((data) => (
+        <Skill skillsObj={data} key={data.name} />
       ))}
     </div>
   );
 }
 
-function Skill(props) {
+function Skill({ skillsObj }) {
   return (
-    <div className="skill">
-      <p>{props.name}</p>
+    <div className="skill" style={{ backgroundColor: skillsObj.color }}>
+      <p>{skillsObj.name}</p>
+      <p>{skillsObj.level === "beginner" ? "😐" : null}</p>
+      <p>{skillsObj.level === "intermediate" ? "😌" : null}</p>
+      <p>{skillsObj.level === "advanced" ? "😁" : null}</p>
     </div>
   );
 }
