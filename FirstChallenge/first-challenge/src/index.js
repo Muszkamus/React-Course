@@ -3,11 +3,11 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 
 const skills = [
-  { name: "JavaScript", level: "advanced", color: "blue" },
+  { name: "JavaScript", level: "advanced", color: "bisque" },
   { name: "HTML", level: "intermediate", color: "beige" },
   { name: "CSS", level: "advanced", color: "yellow" },
   { name: "React", level: "intermediate", color: "red" },
-  { name: " BackEnd", level: "beginner", color: "white" },
+  { name: "BackEnd", level: "beginner", color: "white" },
   { name: "FrontEnd", level: "intermediate", color: "brown" },
   { name: "Quantum physics", level: "beginner", color: "green" },
 ];
@@ -43,19 +43,26 @@ function SkillSet() {
   return (
     <div className="skillset">
       {skills.map((data) => (
-        <Skill skillsObj={data} key={data.name} />
+        <Skill
+          name={data.name}
+          level={data.level}
+          color={data.color}
+          key={data.name}
+        />
       ))}
     </div>
   );
 }
 
-function Skill({ skillsObj }) {
+function Skill({ name, level, color }) {
   return (
-    <div className="skill" style={{ backgroundColor: skillsObj.color }}>
-      <p>{skillsObj.name}</p>
-      <p>{skillsObj.level === "beginner" ? "😐" : null}</p>
-      <p>{skillsObj.level === "intermediate" ? "😌" : null}</p>
-      <p>{skillsObj.level === "advanced" ? "😁" : null}</p>
+    <div className="skill" style={{ backgroundColor: color }}>
+      <p>{name}</p>
+      <p>
+        {level === "beginner" && "😐"}
+        {level === "intermediate" && "😌"}
+        {level === "advanced" && "😁"}
+      </p>
     </div>
   );
 }

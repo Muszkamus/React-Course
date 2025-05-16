@@ -57,3 +57,7 @@
   border: 2px solid rgb(121, 121, 121);
   border-radius: 20px;
 }
+.skill:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}

@@ -977,3 +977,122 @@ function Skill({ name, level, color }) {
   );
 }
 ```
+
+---
+
+# <centre> Section 6: **State, Events, and Forms: Interactive Components**
+
+---
+
+```js
+const messages = [
+  "Learn React ⚛️",
+  "Apply for jobs 💼",
+  "Invest your new income 🤑",
+];
+
+export default function App() {
+  const step = 2;
+  return (
+    <div className="steps">
+      <div className="numbers">
+        <div className={step >= 1 && "active"}>1</div>
+        <div className={step >= 2 && "active"}>2</div>
+        <div className={step >= 3 && "active"}>3</div>
+      </div>
+
+      <p className="message">
+        Step {step}: {messages[step - 1]}
+      </p>
+
+      <div className="buttons">
+        <button style={{ backgroundColor: "#7950f2", color: "fff" }}>
+          Previous
+        </button>
+        <button style={{ backgroundColor: "#7950f2", color: "fff" }}>
+          Next
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+# 59. **What is state in React?**
+
+---
+
+- state is a data that component can hold over time, necessary for information that it needs to remember throughout the app's lifecycle.
+- Component's memory!
+- State variable/piece of state: A single variable in a component (component state)
+- Updating component state triggers React to re-render the component
+
+---
+
+# 60. **Creating a State Variable With useState**
+
+---
+
+```js
+import { useState } from "react";
+
+const messages = [
+  "Learn React ⚛️",
+  "Apply for jobs 💼",
+  "Invest your new income 🤑",
+];
+
+export default function App() {
+  const [step, setStep] = useState(1);
+
+  function handlePrevious() {
+    if (step > 1) setStep(step - 1);
+  }
+  function handleNext() {
+    if (step < 3) setStep(step + 1);
+  }
+  return (
+    <div className="steps">
+      <div className="numbers">
+        <div className={step >= 1 ? "active" : ""}>1</div>
+        <div className={step >= 2 ? "active" : ""}>2</div>
+        <div className={step >= 3 ? "active" : ""}>3</div>
+      </div>
+
+      <p className="message">
+        Step {step}: {messages[step - 1]}
+      </p>
+
+      <div className="buttons">
+        <button
+          style={{ backgroundColor: "#7950f2", color: "fff" }}
+          onClick={handlePrevious}
+          // onMouseEnter={() => console.log("Enter")}
+        >
+          Previous
+        </button>
+        <button
+          style={{ backgroundColor: "#7950f2", color: "fff" }}
+          onClick={handleNext}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+# 62. **The Mechanics of state**
+
+---
+
+- Because React is declarative, We don't do direct DOM manipulations
+- In React, a view is updated by re-rendering the component
+- A component is re-rendered when its state is updated
+
+---
