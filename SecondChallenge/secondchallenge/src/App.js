@@ -2,12 +2,19 @@ import React, { useState } from "react";
 
 export default function App() {
   const [step, setStep] = useState(1);
-  const [count, setCount] = useState(1);
-  const [countShow, setCountShow] = useState(1);
+  const [count, setCount] = useState(0);
+  const [countShow, setCountShow] = useState(0); // this is only for UI
 
   const date = new Date();
   const numericalDate = date.getTime();
-  const day = 1000 * 60 * 60 * 24 * count;
+  const day = 1000 * 60 * 60 * 24 * count; // Day in numerical value
+
+  const dateOptions = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
 
   const countDay = new Date(numericalDate + day);
 
@@ -35,7 +42,6 @@ export default function App() {
         <button className="button" onClick={() => handlePreviousStep()}>
           -
         </button>
-
         <p className="stepCounter">Step: {step}</p>
         <button className="button" onClick={() => handleNextStep()}>
           +
@@ -46,7 +52,6 @@ export default function App() {
           <button className="button" onClick={() => handlePreviousCount()}>
             -
           </button>
-
           <p className="stepCounter">Count: {countShow}</p>
           <button className="button" onClick={() => handleNextCount()}>
             +
@@ -54,7 +59,14 @@ export default function App() {
         </div>
       </div>
       <div className="timer">
-        <p>{countDay.toString()}</p>
+        {countDay.getTime() === date.getTime() ? (
+          <p>Today is {countDay.toLocaleDateString("en-UK", dateOptions)}</p>
+        ) : (
+          <p>
+            {` ${count} days from today is
+            ${countDay.toLocaleDateString("en-UK", dateOptions)}`}
+          </p>
+        )}
       </div>
     </div>
   );
