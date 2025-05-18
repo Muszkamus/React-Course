@@ -3,8 +3,9 @@ import React, { useState } from "react";
 export default function App() {
   const [step, setStep] = useState(1);
   const [count, setCount] = useState(1);
+  const [countShow, setCountShow] = useState(1);
 
-  const date = new Date(2025, 4, 18);
+  const date = new Date();
   const numericalDate = date.getTime();
   const day = 1000 * 60 * 60 * 24 * count;
 
@@ -19,11 +20,13 @@ export default function App() {
   }
 
   function handleNextCount() {
-    setCount((s) => s + 1);
+    setCount((s) => s + step);
+    setCountShow((s) => s + 1);
   }
 
   function handlePreviousCount() {
-    setCount((s) => s - 1);
+    setCount((s) => s - step);
+    setCountShow((s) => s - 1);
   }
 
   return (
@@ -44,7 +47,7 @@ export default function App() {
             -
           </button>
 
-          <p className="stepCounter">Count: {count}</p>
+          <p className="stepCounter">Count: {countShow}</p>
           <button className="button" onClick={() => handleNextCount()}>
             +
           </button>
