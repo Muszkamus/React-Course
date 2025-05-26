@@ -1260,3 +1260,154 @@ function Stats() {
   );
 }
 ```
+
+---
+
+# 72. **Building a Form and Handling Submissions**
+
+---
+
+```js
+function Form() {
+  function handleSubmit(e) {
+    e.preventDefault();
+  }
+  return (
+    <form className="add-form" onSubmit={handleSubmit}>
+      {" This will work because we can press Enter and it will work as well "}
+
+      <h3>What do you need for your trip? 😊</h3>
+      <select>
+        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+          <option value={num} key={num}>
+            {num}
+          </option>
+        ))}
+      </select>
+      <input type="text" placeholder="Item..."></input>
+      <button>Add</button>
+    </form>
+  );
+}
+```
+
+---
+
+# 73. **Controlled Elements**
+
+---
+
+```js
+import React, { use, useState } from "react";
+
+const initialItems = [
+  { id: 1, description: "Passports", quantity: 2, packed: false },
+  { id: 2, description: "Socks", quantity: 12, packed: false },
+  { id: 3, description: "Charger", quantity: 1, packed: false },
+];
+
+export default function App() {
+  return (
+    <div className="app">
+      <Logo />
+      <Form />
+      <PackingList />
+      <Stats />
+    </div>
+  );
+}
+
+function Logo() {
+  return <h1>🌴Far away👜</h1>;
+}
+function Form() {
+  const [description, setDescription] = useState("");
+  const [quantity, setQuantity] = useState(1);
+
+  function handleSubmit(e) {
+    e.preventDefault(); // Prevents reload of the page
+    if (!description) return; // If it is empty the do nothing
+    const newItem = { description, quantity, packed: false, id: Date.now() }; // Create new Item based on the states
+    console.log(newItem);
+
+    setDescription(""); // Sets back to original state
+    setQuantity(1); // Same
+  }
+
+  return (
+    <form className="add-form" onSubmit={handleSubmit}>
+      <h3>What do you need for your trip? 😊</h3>
+      <select
+        value={quantity}
+        onChange={(e) => setQuantity(Number(e.target.value))}
+      >
+        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+          <option value={num} key={num}>
+            {num}
+          </option>
+        ))}
+      </select>
+      <input
+        type="text"
+        placeholder="Item..."
+        value={description}
+        onChange={(e) => setDescription(e.target.value)} // Using state to set something new
+        // e.target.value is basically any value that we have inside, very important to remember as we can pass it on further
+      ></input>
+      <button>Add</button>
+    </form>
+  );
+}
+function PackingList() {
+  return (
+    <div className="list">
+      <ul>
+        {initialItems.map((item) => {
+          return <Item item={item} key={item.id} />;
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function Item({ item }) {
+  return (
+    <li>
+      <span style={item.packed ? { textDecoration: "line-through" } : {}}>
+        {item.quantity} {item.description}
+      </span>
+      <button>❌</button>
+    </li>
+  );
+}
+
+function Stats() {
+  return (
+    <footer className="stats">
+      <em> You have X items on your list, and you already packed X(%) </em>
+    </footer>
+  );
+}
+```
+
+---
+
+# 74. **States vs Props**
+
+---
+
+| **State**                                    | **Props**                                                                 |
+| -------------------------------------------- | ------------------------------------------------------------------------- |
+| Internal data, owned by component            | External data, owned by parent component                                  |
+| Component memory                             | Similar to function parameters                                            |
+| Can be updated by the component itself       | Read only                                                                 |
+| Updating state causes component to re-render | Receiving new props causes re-render. Usually when parent's state updates |
+| Used to make components interactive          |                                                                           |
+
+**State State is like the component's personal memory — used for dynamic behavior. A component controls and updates its own state using useState or setState. When changed, it causes that component to re-render.**
+
+**Props Props are like inputs from the parent. They are passed down and cannot be changed by the receiving (child) component. If the parent updates its state and passes down new props, the child re-renders accordingly.**
+
+- State = local, mutable, controls interactivity.
+- Props = external, read-only, passed from parent.
+- They work together: Parent manages state ➝ passes via props ➝ child uses props to display or trigger changes (often calling parent functions
