@@ -18,14 +18,6 @@ export default function App() {
 
   const countDay = new Date(numericalDate + day);
 
-  function handleNextStep() {
-    setStep((s) => s + 1);
-  }
-
-  function handlePreviousStep() {
-    setStep((s) => s - 1);
-  }
-
   function handleNextCount() {
     setCount((s) => s + step);
     setCountShow((s) => s + 1);
@@ -35,17 +27,20 @@ export default function App() {
     setCount((s) => s - step);
     setCountShow((s) => s - 1);
   }
-
   return (
     <div className="app">
       <div className="settings">
-        <button className="button" onClick={() => handlePreviousStep()}>
-          -
-        </button>
+        <input
+          type="range"
+          min="1"
+          max="100"
+          value={step}
+          class="slider"
+          id="myRange"
+          onChange={(e) => setStep(Number(e.target.value))} // this allows to change slider
+        ></input>
+        {/*Now get this swapped with input box*/}
         <p className="stepCounter">Step: {step}</p>
-        <button className="button" onClick={() => handleNextStep()}>
-          +
-        </button>
       </div>
       <div>
         <div className="settings">
