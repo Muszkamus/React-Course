@@ -1495,3 +1495,143 @@ function FlashCards() {
   );
 }
 ```
+
+---
+
+# Second Timer Challenge
+
+---
+
+```js
+import React, { useState } from "react";
+
+export default function App() {
+  const [step, setStep] = useState(1);
+  const [count, setCount] = useState(0);
+  const [countShow, setCountShow] = useState(0); // this is only for UI
+
+  const date = new Date();
+  const numericalDate = date.getTime();
+  const day = 1000 * 60 * 60 * 24 * count; // Day in numerical value
+
+  const dateOptions = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+
+  const countDay = new Date(numericalDate + day);
+
+  function handleNextCount() {
+    setCount((s) => s + step);
+    setCountShow((s) => s + 1);
+  }
+
+  function handlePreviousCount() {
+    setCount((s) => s - step);
+    setCountShow((s) => s - 1);
+  }
+  function resetTimer() {
+    setCount(() => 0);
+    setCountShow(() => 0);
+    setStep(() => 1);
+  }
+  return (
+    <div className="app">
+      <div className="settings">
+        <input
+          className="slider"
+          type="range"
+          min="1"
+          max="100"
+          value={step}
+          onChange={(e) => setStep(Number(e.target.value))} // this allows to change slider
+        ></input>
+        {/*Now get this swapped with input box*/}
+        <p className="stepCounter">{step}</p>
+      </div>
+      <div>
+        <div className="settings">
+          <button className="button" onClick={() => handlePreviousCount()}>
+            -
+          </button>
+          <input
+            type="number"
+            value={count}
+            onChange={(e) => setCount(Number(e.target.value))} // Using state to set something new
+            // e.target.value is basically any value that we have inside, very important to remember as we can pass it on further
+          ></input>
+          <button className="button" onClick={() => handleNextCount()}>
+            +
+          </button>
+        </div>
+      </div>
+      <div className="timer">
+        {countDay.getTime() === date.getTime() ? (
+          <p>Today is {countDay.toLocaleDateString("en-UK", dateOptions)}</p>
+        ) : (
+          <p>
+            {` ${count} days from today is
+            ${countDay.toLocaleDateString("en-UK", dateOptions)}`}
+          </p>
+        )}
+      </div>
+      {count >= 1 || step > 1 ? (
+        <button className="resetButton" onClick={() => resetTimer()}>
+          Reset
+        </button>
+      ) : null}
+    </div>
+  );
+}
+```
+
+---
+
+# <centre> **Section 7: Thinking in React: State Management**
+
+---
+
+# 78. **What is "Thinking in React?**
+
+---
+
+- React Mindset > state,data flow, effects, etc.
+- Thinking in state transitions, not element mutations.
+
+### Break the desired UI into components and extablish the components tree
+
+### Build a static version in React (without state)
+
+### Think about state:
+
+- When to use state
+- Types to place each piece of state
+
+### Extablish data flow
+
+- One-way data flow
+- Child to parent communication
+- Accessing global state
+
+- Thinking in React
+
+---
+
+# 79. **Fundamentals of state Management**
+
+---
+
+| **Local State**                                                                                                            | **Global State**                                                             |
+| -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| State needed only by one or few components                                                                                 | State that many components might need                                        |
+| State that is defined in a component and only that component and child components have access to it (by passing via props) | Shared state that is accessible to every component in the entire application |
+
+---
+
+# 80. **Thinking About State and Lifting State Up**
+
+---
+
+![alt text](image-2.png)

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 export default function App() {
   const [step, setStep] = useState(1);
   const [count, setCount] = useState(0);
-  const [countShow, setCountShow] = useState(0); // this is only for UI
 
   const date = new Date();
   const numericalDate = date.getTime();
@@ -20,16 +19,14 @@ export default function App() {
 
   function handleNextCount() {
     setCount((s) => s + step);
-    setCountShow((s) => s + 1);
   }
 
   function handlePreviousCount() {
     setCount((s) => s - step);
-    setCountShow((s) => s - 1);
   }
   function resetTimer() {
     setCount(() => 0);
-    setCountShow(() => 0);
+
     setStep(() => 1);
   }
   return (
@@ -44,7 +41,7 @@ export default function App() {
           onChange={(e) => setStep(Number(e.target.value))} // this allows to change slider
         ></input>
         {/*Now get this swapped with input box*/}
-        <p className="stepCounter">Step: {step}</p>
+        <p className="stepCounter">{step}</p>
       </div>
       <div>
         <div className="settings">
@@ -72,9 +69,11 @@ export default function App() {
           </p>
         )}
       </div>
-      <button className="resetButton" onClick={() => resetTimer()}>
-        Reset
-      </button>
+      {count >= 1 || step > 1 ? (
+        <button className="resetButton" onClick={() => resetTimer()}>
+          Reset
+        </button>
+      ) : null}
     </div>
   );
 }
