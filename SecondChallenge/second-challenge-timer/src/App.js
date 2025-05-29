@@ -27,16 +27,20 @@ export default function App() {
     setCount((s) => s - step);
     setCountShow((s) => s - 1);
   }
+  function resetTimer() {
+    setCount(() => 0);
+    setCountShow(() => 0);
+    setStep(() => 1);
+  }
   return (
     <div className="app">
       <div className="settings">
         <input
+          className="slider"
           type="range"
           min="1"
           max="100"
           value={step}
-          class="slider"
-          id="myRange"
           onChange={(e) => setStep(Number(e.target.value))} // this allows to change slider
         ></input>
         {/*Now get this swapped with input box*/}
@@ -47,7 +51,12 @@ export default function App() {
           <button className="button" onClick={() => handlePreviousCount()}>
             -
           </button>
-          <p className="stepCounter">Count: {countShow}</p>
+          <input
+            type="number"
+            value={count}
+            onChange={(e) => setCount(Number(e.target.value))} // Using state to set something new
+            // e.target.value is basically any value that we have inside, very important to remember as we can pass it on further
+          ></input>
           <button className="button" onClick={() => handleNextCount()}>
             +
           </button>
@@ -63,6 +72,9 @@ export default function App() {
           </p>
         )}
       </div>
+      <button className="resetButton" onClick={() => resetTimer()}>
+        Reset
+      </button>
     </div>
   );
 }
