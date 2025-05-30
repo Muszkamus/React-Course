@@ -1634,4 +1634,96 @@ export default function App() {
 
 ---
 
-![alt text](image-2.png)
+![image info](./image.png)
+
+---
+
+# 84. **Derived State**
+
+---
+
+![alt text](image-1.png)
+
+## 🧠 React: Deriving State – Crucial Notes
+
+### ❌ Problem: Redundant State
+
+```js
+const [cart, setCart] = useState([...]);
+const [numItems, setNumItems] = useState(2);
+const [totalPrice, setTotalPrice] = useState(30.98);
+```
+
+**numItems and totalPrice are derived from cart, but stored separately.**
+
+Leads to:
+
+- Manual sync maintenance
+- Multiple re-renders
+- Higher bug risk
+
+✅ Solution: Derive State from Source
+
+```js
+const [cart, setCart] = useState([...]);
+
+const numItems = cart.length;
+const totalPrice = cart.reduce((acc, cur) => acc + cur.price, 0);
+```
+
+cart is the single source of truth
+
+Derived values are just variables, not state
+
+💡 Key Principles
+
+### Only use useState when:
+
+- Value changes independently
+- It's user-controlled
+
+### Derive everything else from existing state or props
+
+✅ Benefits
+
+- Fewer re-renders
+- Simpler code
+- Less chance of bugs
+- Values always in sync
+
+---
+
+# 85. **Calculating Statistics as Derived State**
+
+---
+
+```js
+function Stats({ items }) {
+  const numItems = items.length;
+  const numPackedItems = items.filter((item) => item.packed).length;
+  const percentagePacked = Math.round((numPackedItems / numItems) * 100);
+  const renderItems = function () {
+    if (numItems === 0) {
+      return <em>You have no items on your list</em>;
+    } else if (numItems === 1 && numPackedItems === 0) {
+      return (
+        <em>
+          You have {numItems} item on your list, and you already packed{" "}
+          {numPackedItems} ({percentagePacked}%)
+        </em>
+      );
+    } else if (numItems === numPackedItems) {
+      return <em>All packed and ready to go! ✈️</em>;
+    } else {
+      return (
+        <em>
+          You have {numItems} items on your list, and you already packed{" "}
+          {numPackedItems} ({percentagePacked}%)
+        </em>
+      );
+    }
+  };
+
+  return <footer className="stats">{renderItems()}</footer>;
+}
+```
