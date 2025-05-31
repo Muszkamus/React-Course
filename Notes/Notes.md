@@ -1727,3 +1727,54 @@ function Stats({ items }) {
   return <footer className="stats">{renderItems()}</footer>;
 }
 ```
+
+---
+
+# 86. **Sorting Items**
+
+---
+
+```js
+let sortedItems;
+
+if (sortBy === "input") sortedItems = items; // If the user chooses to sort by "input", return the original array — no sorting.
+if (sortBy === "description")
+  sortedItems = items
+    .slice()
+    .sort((a, b) => a.description.localeCompare(b.description)); // Slice not to mutate, localeCompare() is a string-safe alphabetical comparator (handles casing and locale).
+if (sortBy === "packed")
+  sortedItems = items
+    .slice()
+    .sort((a, b) => Number(a.packed) - Number(b.packed)); // a.packed is a boolean, so Number(a.packed) converts it to: false → 0 > true → 1
+// //So this sorts: Unpacked items (0) first > Packed items (1) last
+
+<div className="actions" onChange={(e) => setSortBy(e.target.value)}>
+  <select value={sortBy}>
+    <option value="input">Sort by input order</option>
+    <option value="description">Sort by description</option>
+    <option value="packed">Sort by packed status</option>
+  </select>
+</div>;
+```
+
+---
+
+# 87. **Clearing the list**
+
+---
+
+```js
+function handleDeleteAllItems(id) {
+  const confirmed = window.confirm(
+    "Are you sure you want to delete all items?"
+  );
+
+  if (confirmed) setItems([]);
+}
+```
+
+---
+
+# 88. **Moving Components Into Seperate Files**
+
+---
