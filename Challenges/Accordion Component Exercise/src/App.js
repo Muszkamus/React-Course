@@ -23,17 +23,20 @@ function Accordion({ data }) {
   const [curOpen, setCurOpen] = useState(null); // State
   return (
     <div className="accordion">
-      {data.map((el, i) => (
-        <AccordionItem
-          curOpen={curOpen}
-          onOpen={setCurOpen}
-          title={el.title}
-          num={i}
-          key={el.title}
-        >
-          {el.text}
-        </AccordionItem> // scanning each item and mapping them
-      ))}
+      {data.map(
+        // scanning each item and mapping them
+        (el, i) => (
+          <AccordionItem
+            curOpen={curOpen}
+            onOpen={setCurOpen}
+            title={el.title}
+            num={i}
+            key={el.title}
+          >
+            {el.text}
+          </AccordionItem>
+        )
+      )}
     </div>
   );
 }
