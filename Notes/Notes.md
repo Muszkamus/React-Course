@@ -1778,3 +1778,61 @@ function handleDeleteAllItems(id) {
 # 88. **Moving Components Into Seperate Files**
 
 ---
+
+---
+
+# 89. **Exercise #1: Accordion Component (v1)**
+
+---
+
+```js
+import React, { useState } from "react";
+
+const faqs = [
+  {
+    title: "Where are these chairs assembled?",
+    text: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Accusantium, quaerat temporibus quas dolore provident nisi ut aliquid ratione beatae sequi aspernatur veniam repellendus.",
+  },
+  {
+    title: "How long do I have to return my chair?",
+    text: "Pariatur recusandae dignissimos fuga voluptas unde optio nesciunt commodi beatae, explicabo natus.",
+  },
+  {
+    title: "Do you ship to countries outside the EU?",
+    text: "Excepturi velit laborum, perspiciatis nemo perferendis reiciendis aliquam possimus dolor sed! Dolore laborum ducimus veritatis facere molestias!",
+  },
+];
+
+export default function App() {
+  return <Accordion data={faqs} />; // Make data as a prop to the above FAQS array
+}
+
+function Accordion({ data }) {
+  return (
+    <div className="accordion">
+      {data.map((el, i) => (
+        <AccordionItem title={el.title} text={el.text} num={i} key={el.title} /> // scanning each item and mapping them
+      ))}
+    </div>
+  );
+}
+
+function AccordionItem({ num, title, text }) {
+  // Passing props
+  const [isOpen, setisOpen] = useState(); // State
+
+  function handleToggle() {
+    setisOpen((isOpen) => !isOpen); // Toggling between true and false
+  }
+  return (
+    <div className={`item ${isOpen ? "open " : null}`} onClick={handleToggle}>
+      <p className="number">{num < 9 ? `0${num + 1}` : num + 1}</p>
+      <p className="text">{title}</p>
+      <p className="icon">{isOpen ? "-" : "+"}</p>
+      {isOpen && <p className="content-box">{text}</p>}
+    </div>
+  );
+}
+```
+
+---
