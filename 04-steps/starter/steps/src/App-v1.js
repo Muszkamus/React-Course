@@ -37,29 +37,22 @@ export default function App() {
           </p>
 
           <div className="buttons">
-            <Button bgColor="#7950f2" textColor="fff" onClick={handlePrevious}>
-              <span>⏮️</span> Previous
-            </Button>
-
-            <Button bgColor="#7950f2" textColor="fff" onClick={handleNext}>
-              <span>Next</span>⏭️{" "}
-              {/* Anything happning between component tags are children, and it has to be defined below as children prop */}
-            </Button>
+            <button
+              style={{ backgroundColor: "#7950f2", color: "fff" }}
+              onClick={handlePrevious}
+              // onMouseEnter={() => console.log("Enter")}
+            >
+              Previous
+            </button>
+            <button
+              style={{ backgroundColor: "#7950f2", color: "fff" }}
+              onClick={handleNext}
+            >
+              Next
+            </button>
           </div>
         </div>
       )}
     </>
-  );
-}
-
-function Button({ textColor, bgColor, onClick, children }) {
-  return (
-    <button
-      style={{ backgroundColor: bgColor, color: textColor }}
-      onClick={onClick}
-    >
-      {children}{" "}
-      {/* " Children is predefined for React so it has to be named this" */}
-    </button>
   );
 }

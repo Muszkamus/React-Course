@@ -1779,6 +1779,10 @@ function handleDeleteAllItems(id) {
 
 ---
 
+- When exporting component > right click on it and Refactor to a new file
+
+- When exporting, make sure to export default and remove extra curly braces in the other components when importing
+
 ---
 
 # 89. **Exercise #1: Accordion Component (v1)**
@@ -1836,3 +1840,81 @@ function AccordionItem({ num, title, text }) {
 ```
 
 ---
+
+# 90. **The "children Prop: Making a Reusable Button**
+
+---
+
+![alt text](image-2.png)
+
+```js
+import { useState } from "react";
+
+const messages = [
+  "Learn React ⚛️",
+  "Apply for jobs 💼",
+  "Invest your new income 🤑",
+];
+
+export default function App() {
+  // const [stateVariable, setStateVariable] = useState(initialValue);
+
+  const [step, setStep] = useState(1); // 'step' holds the current step number; 'setStep' updates it
+  const [isOpen, setIsOpen] = useState(true);
+
+  function handlePrevious() {
+    if (step > 1) setStep((s) => s - 1);
+  }
+  function handleNext() {
+    if (step < 3) setStep((s) => s + 1);
+  }
+  return (
+    // Fragmentation
+    <>
+      <button className="close" onClick={() => setIsOpen((is) => !is)}>
+        &times;
+      </button>
+      {isOpen && (
+        <div className="steps">
+          <div className="numbers">
+            <div className={step >= 1 ? "active" : ""}>1</div>
+            <div className={step >= 2 ? "active" : ""}>2</div>
+            <div className={step >= 3 ? "active" : ""}>3</div>
+          </div>
+
+          <p className="message">
+            Step {step}: {messages[step - 1]}
+          </p>
+
+          <div className="buttons">
+            <Button bgColor="#7950f2" textColor="fff" onClick={handlePrevious}>
+              <span>⏮️</span> Previous
+            </Button>
+
+            <Button bgColor="#7950f2" textColor="fff" onClick={handleNext}>
+              <span>Next</span>⏭️{" "}
+              {/* 
+  Anything written between a component’s opening and closing tags
+  becomes `props.children`. It's a built-in React prop.
+  This lets us inject custom JSX content into reusable components.
+*/}
+            </Button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function Button({ textColor, bgColor, onClick, children }) {
+  return (
+    <button
+      style={{ backgroundColor: bgColor, color: textColor }}
+      onClick={onClick}
+    >
+      {children}{" "}
+      {/* " Children is predefined for React so it has to be named this" */}
+    </button>
+  );
+}
+```
