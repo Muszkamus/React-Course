@@ -108,8 +108,8 @@ body {
 }
 
 form {
-  font-size: 1.6rem;
   display: grid;
+  font-size: 1.6rem;
   align-items: center;
   gap: 1.2rem;
 
@@ -131,7 +131,7 @@ label {
   font-weight: 500;
 }
 
-label::first-letter {
+h2::label::first-letter {
   display: inline-block;
   margin-right: 4px;
   font-size: 1.8rem;
