@@ -1,0 +1,38 @@
+.bookingForm {
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+  border: 1px solid #5e5e5e;
+  width: 400px;
+  padding: 20px;
+}
+.inputRow {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* better than margin-right for spacing */
+}
+.inputBox {
+  background-color: #caf0f8;
+  border: 1px solid rgb(185, 185, 185);
+  padding: 5px;
+  flex: 1;
+  border-radius: 5px;
+}
+.sectionArea {
+  padding-top: 15px;
+}
+.titleText {
+  font-size: 20px;
+  font-weight: bold;
+}
+.formGroup {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.submitButton {
+  flex: 1;
+  margin: 10px 60px;
+  font-size: 30px;
+}
