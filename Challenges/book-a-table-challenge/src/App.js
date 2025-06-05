@@ -8,12 +8,25 @@ export default function App() {
   const [emailAddress, setEmailAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [guests, setGuests] = useState(1);
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(formatDate(new Date()));
   const [hour, setHour] = useState("");
   const [minute, setMinute] = useState("");
   const [bookings, setBookings] = useState(bookingData);
   const [submittedBooking, setSubmittedBooking] = useState();
   const [isBookingSubmitted, setIsBookingSubmitted] = useState(false);
+
+  function formatDate(date) {
+    // Copied from StackOverflow
+    let d = new Date(date),
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
+    return [year, month, day].join("-");
+  }
 
   function bookATable(e) {
     e.preventDefault();
@@ -30,17 +43,27 @@ export default function App() {
       minute,
     };
 
-    if (!firstName || !lastName) {
+    if (
+      !firstName ||
+      !lastName ||
+      !emailAddress ||
+      !phoneNumber ||
+      !hour ||
+      !minute
+    ) {
       return;
     } else {
       setBookings([...bookings, newBooking]);
       setFirstName("");
       setLastName("");
       setEmailAddress("");
+      setPhoneNumber("");
+      setGuests(1);
+      setDate(formatDate(new Date()));
+      setHour("");
+      setMinute("");
       setIsBookingSubmitted(true);
       setSubmittedBooking(newBooking);
-      console.log("Available");
-      console.log(newBooking);
     }
   }
 
@@ -92,7 +115,6 @@ function BookingForm({
   minute,
   setMinute,
   bookATable,
-  availableBooking,
 }) {
   return (
     <form
@@ -124,10 +146,7 @@ function BookingForm({
         minute={minute}
         setMinute={setMinute}
       />
-      <SubmitButton
-        bookATable={bookATable}
-        availableBooking={availableBooking}
-      />
+      <SubmitButton bookATable={bookATable} />
     </form>
   );
 }
@@ -226,18 +245,31 @@ function DateTimeInput({ date, setDate, hour, setHour, minute, setMinute }) {
     <div className="sectionArea">
       <label className="titleText">Date: </label>
       <div className="inputRow">
-        <input type="date" className="inputBox"></input>
-        <select className="inputBox">
+        <input
+          type="date"
+          className="inputBox"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        ></input>
+        <select
+          className="inputBox"
+          value={hour}
+          onChange={(e) => setHour(e.target.value)}
+        >
           {hours.map((hour) => (
             <option key={hour} value={hour}>
               {hour}
             </option>
           ))}
         </select>
-        <select className="inputBox">
+        <select
+          className="inputBox"
+          value={minute}
+          onChange={(e) => setMinute(e.target.value)}
+        >
           {minutes.map((minute) => (
             <option key={minute} value={minute}>
-              {minute}
+              {String(minute).padStart(2, "0")}
             </option>
           ))}
         </select>
@@ -266,9 +298,10 @@ function ExistingBookingsform({
         bookings.map((booking) => (
           <div key={booking.id}>
             <p>
-              {booking.firstName} {booking.lastName} has booked a table for{" "}
-              {booking.guests} people. Email Address: {booking.emailAddress}{" "}
-              Phone Number: {booking.phoneNumber}
+              {booking.firstName} {booking.lastName} has booked a table for {""}
+              {booking.guests} people on {booking.date} at {booking.hour}:
+              {String(booking.minute).padStart(2, "0")}. Email Address:{" "}
+              {booking.emailAddress} Phone Number: {booking.phoneNumber}
             </p>
           </div>
         ))}
