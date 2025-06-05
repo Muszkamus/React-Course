@@ -1,42 +1,43 @@
 import { useState } from "react";
 
-const bookingData = [{}];
+const bookingData = [];
 
 export default function App() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [bookings, setBookings] = useState(bookingData);
 
-  function bookATable() {
+  function bookATable(e) {
+    e.preventDefault();
     const uniqueID = new Date().getTime(); // This will work for now
-    const addBookingData = [
-      {
-        id: { uniqueID },
-        firstName: { firstName },
-        lastName: { lastName },
-        emailAddress: { emailAddress },
-        phoneNumber: { phoneNumber },
-        guests: "",
-        date: "",
-        hour: "",
-        minute: "",
-      },
-    ];
+    const newBooking = {
+      id: uniqueID,
+      firstName,
+      lastName,
+      emailAddress,
+      phoneNumber,
+      // guests: "",
+      // date: "",
+      //  hour: "",
+      // minute: "",
+    };
+
     if (!firstName || !lastName) {
-      console.log("unavailable");
       return;
     } else {
+      setBookings([...bookings, newBooking]);
       setFirstName("");
       setLastName("");
       setEmailAddress("");
       console.log("Available");
-      console.log(...addBookingData);
+      console.log(newBooking);
     }
   }
 
   return (
-    <div>
+    <div className="mainApp">
       <BookingForm
         firstName={firstName}
         setFirstName={setFirstName}
@@ -47,6 +48,12 @@ export default function App() {
         phoneNumber={phoneNumber}
         setPhoneNumber={setPhoneNumber}
         bookATable={bookATable}
+      />
+      <ExistingBookingsform
+        firstName={firstName}
+        lastName={lastName}
+        emailAddress={emailAddress}
+        phoneNumber={phoneNumber}
       />
     </div>
   );
@@ -90,7 +97,7 @@ function BookingForm({
 function NameInput({ firstName, setFirstName, lastName, setLastName }) {
   return (
     <div className="sectionArea">
-      <h1>Book with us today</h1>
+      <h1>Booking form</h1>
       <label className="titleText"> Name:</label>
       <div className="inputRow">
         <input
@@ -163,10 +170,17 @@ function PhoneGuestsInput({ phoneNumber, setPhoneNumber }) {
 function DateTimeInput() {
   const openingHour = 16;
   const closingHour = 23;
+  const openingMinute = 0;
+  const closingMinute = 12;
   const hours = Array.from(
     { length: closingHour - openingHour },
     (_, i) => openingHour + i
   ); // This is very useful, I got to learn it
+
+  const minutes = Array.from(
+    { length: closingMinute },
+    (_, i) => openingMinute + i * 5
+  );
   return (
     <div className="sectionArea">
       <label className="titleText">Date: </label>
@@ -175,12 +189,16 @@ function DateTimeInput() {
         <select className="inputBox">
           {hours.map((hour) => (
             <option key={hour} value={hour}>
-              {hour}:00
+              {hour}
             </option>
           ))}
         </select>
         <select className="inputBox">
-          <option>2</option>
+          {minutes.map((minute) => (
+            <option key={minute} value={minute}>
+              {minute}
+            </option>
+          ))}
         </select>
       </div>
     </div>
@@ -190,7 +208,16 @@ function DateTimeInput() {
 function SubmitButton({ bookATable }) {
   return (
     <button className="submitButton" onClick={bookATable}>
-      Book a table
+      Book
     </button>
   );
+}
+
+function ExistingBookingsform({
+  firstName,
+  lastName,
+  emailAddress,
+  phoneNumber,
+}) {
+  return <div className="existingBookingsform"></div>;
 }

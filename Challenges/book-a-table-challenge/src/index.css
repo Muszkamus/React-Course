@@ -1,3 +1,8 @@
+.mainApp {
+  display: flex;
+  flex-direction: row;
+}
+
 .bookingForm {
   display: flex;
   flex-direction: column;
@@ -46,4 +51,13 @@
   transition: 0s;
   background-color: #219ebc;
   transform: scale(1.05);
+}
+
+.existingBookingsform {
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+  border: 1px solid #5e5e5e;
+  width: 400px;
+  padding: 20px;
 }
