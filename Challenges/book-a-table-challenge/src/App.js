@@ -7,7 +7,13 @@ export default function App() {
   const [lastName, setLastName] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [guests, setGuests] = useState(1);
+  const [date, setDate] = useState("");
+  const [hour, setHour] = useState("");
+  const [minute, setMinute] = useState("");
   const [bookings, setBookings] = useState(bookingData);
+  const [submittedBooking, setSubmittedBooking] = useState();
+  const [isBookingSubmitted, setIsBookingSubmitted] = useState(false);
 
   function bookATable(e) {
     e.preventDefault();
@@ -18,10 +24,10 @@ export default function App() {
       lastName,
       emailAddress,
       phoneNumber,
-      // guests: "",
-      // date: "",
-      //  hour: "",
-      // minute: "",
+      guests,
+      date,
+      hour,
+      minute,
     };
 
     if (!firstName || !lastName) {
@@ -31,6 +37,8 @@ export default function App() {
       setFirstName("");
       setLastName("");
       setEmailAddress("");
+      setIsBookingSubmitted(true);
+      setSubmittedBooking(newBooking);
       console.log("Available");
       console.log(newBooking);
     }
@@ -47,13 +55,21 @@ export default function App() {
         setEmailAddress={setEmailAddress}
         phoneNumber={phoneNumber}
         setPhoneNumber={setPhoneNumber}
+        guests={guests}
+        setGuests={setGuests}
+        date={date}
+        setDate={setDate}
+        hour={hour}
+        setHour={setHour}
+        minute={minute}
+        setMinute={setMinute}
         bookATable={bookATable}
       />
       <ExistingBookingsform
-        firstName={firstName}
-        lastName={lastName}
-        emailAddress={emailAddress}
-        phoneNumber={phoneNumber}
+        isBookingSubmitted={isBookingSubmitted}
+        setIsBookingSubmitted={setIsBookingSubmitted}
+        submittedBooking={submittedBooking}
+        bookings={bookings}
       />
     </div>
   );
@@ -67,11 +83,23 @@ function BookingForm({
   setEmailAddress,
   phoneNumber,
   setPhoneNumber,
+  guests,
+  setGuests,
+  date,
+  setDate,
+  hour,
+  setHour,
+  minute,
+  setMinute,
   bookATable,
   availableBooking,
 }) {
   return (
-    <form className="bookingForm" onSubmit={(e) => e.preventDefault()}>
+    <form
+      className="bookingForm"
+      onSubmit={(e) => e.preventDefault()}
+      onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+    >
       <NameInput
         firstName={firstName}
         setFirstName={setFirstName}
@@ -85,8 +113,17 @@ function BookingForm({
       <PhoneGuestsInput
         phoneNumber={phoneNumber}
         setPhoneNumber={setPhoneNumber}
+        guests={guests}
+        setGuests={setGuests}
       />
-      <DateTimeInput />
+      <DateTimeInput
+        date={date}
+        setDate={setDate}
+        hour={hour}
+        setHour={setHour}
+        minute={minute}
+        setMinute={setMinute}
+      />
       <SubmitButton
         bookATable={bookATable}
         availableBooking={availableBooking}
@@ -135,9 +172,9 @@ function EmailInput({ emailAddress, setEmailAddress }) {
   );
 }
 
-function PhoneGuestsInput({ phoneNumber, setPhoneNumber }) {
+function PhoneGuestsInput({ phoneNumber, setPhoneNumber, guests, setGuests }) {
   const maxGuestsAvailable = 6;
-  const guests = Array.from({ length: maxGuestsAvailable }, (_, i) => ++i);
+  const guestsTotal = Array.from({ length: maxGuestsAvailable }, (_, i) => ++i);
   return (
     <div className="sectionArea">
       <div className="inputRow">
@@ -154,10 +191,14 @@ function PhoneGuestsInput({ phoneNumber, setPhoneNumber }) {
         </div>
         <div className="formGroup">
           <label className="titleText">Guests:</label>
-          <select className="inputBox">
-            {guests.map((guests) => (
-              <option key={guests} value={guests}>
-                {guests}
+          <select
+            className="inputBox"
+            value={guests}
+            onChange={(e) => setGuests(e.target.value)}
+          >
+            {guestsTotal.map((numGuests) => (
+              <option key={numGuests} value={numGuests}>
+                {numGuests}
               </option>
             ))}
           </select>
@@ -167,7 +208,7 @@ function PhoneGuestsInput({ phoneNumber, setPhoneNumber }) {
   );
 }
 
-function DateTimeInput() {
+function DateTimeInput({ date, setDate, hour, setHour, minute, setMinute }) {
   const openingHour = 16;
   const closingHour = 23;
   const openingMinute = 0;
@@ -214,10 +255,23 @@ function SubmitButton({ bookATable }) {
 }
 
 function ExistingBookingsform({
-  firstName,
-  lastName,
-  emailAddress,
-  phoneNumber,
+  isBookingSubmitted,
+  submittedBooking,
+  bookings,
 }) {
-  return <div className="existingBookingsform"></div>;
+  return (
+    <div className="existingBookingsform">
+      {submittedBooking &&
+        isBookingSubmitted &&
+        bookings.map((booking) => (
+          <div key={booking.id}>
+            <p>
+              {booking.firstName} {booking.lastName} has booked a table for{" "}
+              {booking.guests} people. Email Address: {booking.emailAddress}{" "}
+              Phone Number: {booking.phoneNumber}
+            </p>
+          </div>
+        ))}
+    </div>
+  );
 }
