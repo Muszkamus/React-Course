@@ -2339,3 +2339,9 @@ function FormSplitBill({ selectedFriend, onSplitBill }) {
   );
 }
 ```
+
+---
+
+# <centre> **Section 10: Thinking in React: Components, Composition, and Reusability**
+
+---
