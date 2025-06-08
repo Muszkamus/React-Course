@@ -2345,3 +2345,348 @@ function FormSplitBill({ selectedFriend, onSplitBill }) {
 # <centre> **Section 10: Thinking in React: Components, Composition, and Reusability**
 
 ---
+
+# 107. **How to Split a UI Into Components**
+
+---
+
+![alt text](image-3.png)
+
+![alt text](image-4.png)
+
+![alt text](image-5.png)
+
+![alt text](image-6.png)
+
+![alt text](image-7.png)
+
+![alt text](image-8.png)
+
+---
+
+# 108. **Splitting Components in Practice**
+
+---
+
+```js
+import { useState } from "react";
+
+const tempMovieData = [
+  {
+    imdbID: "tt1375666",
+    Title: "Inception",
+    Year: "2010",
+    Poster:
+      "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
+  },
+  {
+    imdbID: "tt0133093",
+    Title: "The Matrix",
+    Year: "1999",
+    Poster:
+      "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
+  },
+  {
+    imdbID: "tt6751668",
+    Title: "Parasite",
+    Year: "2019",
+    Poster:
+      "https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg",
+  },
+];
+
+const tempWatchedData = [
+  {
+    imdbID: "tt1375666",
+    Title: "Inception",
+    Year: "2010",
+    Poster:
+      "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
+    runtime: 148,
+    imdbRating: 8.8,
+    userRating: 10,
+  },
+  {
+    imdbID: "tt0088763",
+    Title: "Back to the Future",
+    Year: "1985",
+    Poster:
+      "https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg",
+    runtime: 116,
+    imdbRating: 8.5,
+    userRating: 9,
+  },
+];
+
+const average = (arr) =>
+  arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
+
+export default function App() {
+  return (
+    <>
+      <NavBar />
+      <Main />
+    </>
+  );
+}
+
+function NavBar() {
+  return (
+    <>
+      <nav className="nav-bar">
+        <Logo />
+        <Search />
+        <NumResults />
+      </nav>
+    </>
+  );
+}
+
+function Logo() {
+  return (
+    <div className="logo">
+      <span role="img">🍿</span>
+      <h1>usePopcorn</h1>
+    </div>
+  );
+}
+
+function Search() {
+  const [query, setQuery] = useState("");
+  return (
+    <input
+      className="search"
+      type="text"
+      placeholder="Search movies..."
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+    />
+  );
+}
+
+function NumResults() {
+  return (
+    <p className="num-results">
+      Found <strong>X</strong> results
+    </p>
+  );
+}
+
+function Main() {
+  return (
+    <main className="main">
+      <ListBox />
+      <WatchedBox />
+    </main>
+  );
+}
+
+function ListBox() {
+  const [isOpen1, setIsOpen1] = useState(true);
+  return (
+    <div className="box">
+      <button
+        className="btn-toggle"
+        onClick={() => setIsOpen1((open) => !open)}
+      >
+        {isOpen1 ? "–" : "+"}
+      </button>
+      {isOpen1 && <MovieList />}
+    </div>
+  );
+}
+
+function MovieList() {
+  const [movies, setMovies] = useState(tempMovieData);
+
+  return (
+    <ul className="list">
+      {movies?.map((movie) => (
+        <Movie movie={movie} key={movie.imdbID} />
+      ))}
+    </ul>
+  );
+}
+
+function Movie({ movie }) {
+  return (
+    <li>
+      <img src={movie.Poster} alt={`${movie.Title} poster`} />
+      <h3>{movie.Title}</h3>
+      <div>
+        <p>
+          <span>🗓</span>
+          <span>{movie.Year}</span>
+        </p>
+      </div>
+    </li>
+  );
+}
+
+function WatchedBox() {
+  const [isOpen2, setIsOpen2] = useState(true);
+  const [watched, setWatched] = useState(tempWatchedData);
+
+  return (
+    <div className="box">
+      <button
+        className="btn-toggle"
+        onClick={() => setIsOpen2((open) => !open)}
+      >
+        {isOpen2 ? "–" : "+"}
+      </button>
+      {isOpen2 && (
+        <>
+          <WatchedSummary watched={watched} />
+          <WatchedMoviesList watched={watched} />
+        </>
+      )}
+    </div>
+  );
+}
+
+function WatchedSummary({ watched }) {
+  const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
+  const avgUserRating = average(watched.map((movie) => movie.userRating));
+  const avgRuntime = average(watched.map((movie) => movie.runtime));
+  return (
+    <div className="summary">
+      <h2>Movies you watched</h2>
+      <div>
+        <p>
+          <span>#️⃣</span>
+          <span>{watched.length} movies</span>
+        </p>
+        <p>
+          <span>⭐️</span>
+          <span>{avgImdbRating}</span>
+        </p>
+        <p>
+          <span>🌟</span>
+          <span>{avgUserRating}</span>
+        </p>
+        <p>
+          <span>⏳</span>
+          <span>{avgRuntime} min</span>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function WatchedMoviesList({ watched }) {
+  return (
+    <ul className="list">
+      {watched.map((movie) => (
+        <WatchedMovie movie={movie} key={movie.imdbID} />
+      ))}
+    </ul>
+  );
+}
+
+function WatchedMovie({ movie }) {
+  return (
+    <li>
+      <img src={movie.Poster} alt={`${movie.Title} poster`} />
+      <h3>{movie.Title}</h3>
+      <div>
+        <p>
+          <span>⭐️</span>
+          <span>{movie.imdbRating}</span>
+        </p>
+        <p>
+          <span>🌟</span>
+          <span>{movie.userRating}</span>
+        </p>
+        <p>
+          <span>⏳</span>
+          <span>{movie.runtime} min</span>
+        </p>
+      </div>
+    </li>
+  );
+}
+```
+
+---
+
+# 109. **Component Categories**
+
+---
+
+![alt text](image-9.png)
+
+---
+
+# 110. **Prop Drilling**
+
+---
+
+## 🧠 What is Prop Drilling?
+
+Prop drilling happens when you pass data (via props) from a top-level component down to deeply nested child components — even if some components in between don’t need that data themselves. It’s like handing a note through several people just to reach the person who actually needs it.
+
+## 🧱 Why Is Prop Drilling a Problem?
+
+- Clutters components: Intermediate components must accept and pass along props they don’t use.
+
+- Harder to manage: If many levels are involved, it becomes difficult to track and update data flow.
+
+- Reduces reusability: Components become tightly coupled to specific data paths.
+
+---
+
+# 111. **Component Composition**
+
+---
+
+## ![alt text](image-10.png)
+
+---
+
+# 113. **Using Composition to Make a Reusable Box**
+
+---
+
+```js
+<NavBar>
+  <Search />
+  <NumResults movies={movies} />
+</NavBar>
+```
+
+```js
+function NavBar({ children }) {
+  return <nav className="nav-bar">{children}</nav>;
+}
+```
+
+## ✅ NavBar no longer needs to "carry" props it doesn't use.
+
+## 🧱 Why This Is Better
+
+Makes components like NavBar, Main, or ListBox reusable.
+
+Avoids cluttering intermediate components with unused props.
+
+Keeps data closer to where it’s actually needed.
+
+## 💡 Rule of Thumb
+
+- Use this When?
+  props When component needs specific data
+  children When component wraps or structures UI
+  context When data is needed in many places
+
+## 🧰 Reusable Template (For Future)
+
+```js
+function Wrapper({ children }) {
+  return <div className="wrapper">{children}</div>;
+}
+
+// Usage:
+<Wrapper>
+  <Content />
+</Wrapper>;
+```
