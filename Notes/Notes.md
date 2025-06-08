@@ -2644,7 +2644,7 @@ Prop drilling happens when you pass data (via props) from a top-level component 
 
 ---
 
-# 113. **Using Composition to Make a Reusable Box**
+# 112. **Fixing Prop Drilling With Composition(And building A Layout)**
 
 ---
 
@@ -2690,3 +2690,94 @@ function Wrapper({ children }) {
   <Content />
 </Wrapper>;
 ```
+
+---
+
+# 113. **Using Composition to Make a Reusable Box**
+
+---
+
+```js
+export default function App() {
+  const [watched, setWatched] = useState(tempWatchedData);
+
+  const [movies, setMovies] = useState(tempMovieData);
+  return (
+    <>
+      <NavBar>
+        <Search />
+        <NumResults movies={movies} />
+      </NavBar>
+      <Main>
+        <Box>
+          <MovieList movies={movies} />
+        </Box>
+        <Box>
+          <WatchedSummary watched={watched} />
+          <WatchedMoviesList watched={watched} />
+        </Box>
+      </Main>
+    </>
+  );
+}
+```
+
+---
+
+# 115. **Building a Reusable Star Rating Component**
+
+---
+
+```js
+root.render(
+  <React.StrictMode>
+    {/* <App /> */}
+    <StartRating maxRating={5} />
+    <StartRating maxRating={10} />
+    <StartRating />
+  </React.StrictMode>
+);
+```
+
+```js
+const containerStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: "16px",
+};
+
+const starContainerStyle = {
+  display: "flex",
+  gap: "4px",
+};
+
+const textStyle = {
+  lineHeight: "1",
+  margin: "0",
+};
+
+export default function StartRating({ maxRating = 5 }) {
+  // Here we are setting default value in prop, if it is not chosen in the index file
+  const containerStyle = {
+    display: "flex",
+    alignItems: "center",
+    gap: "16px",
+  };
+  return (
+    <div style={containerStyle}>
+      <div style={starContainerStyle}>
+        {Array.from({ length: maxRating }, (_, i) => (
+          <span>{i + 1}</span>
+        ))}
+      </div>
+      <p style={textStyle}>10</p>
+    </div>
+  );
+}
+```
+
+---
+
+# 116. **Creating the Stars**
+
+---
