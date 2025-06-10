@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./index.css";
 
 export default function App() {
@@ -34,6 +35,37 @@ export default function App() {
   );
 }
 
-function TextExpander() {
-  return <div>TODO</div>;
+function TextExpander({
+  collapsedNumWords = 300,
+  expandButtonText = "Show text",
+  collapseButtonText = "Collapse text",
+  buttonColor = "white",
+  className = "box",
+  children,
+}) {
+  const [expanded, setExpanded] = useState();
+  function handleExpanding() {
+    setExpanded((expanded) => !expanded);
+  }
+
+  function showSplitText(string, length) {
+    if (typeof string === !"string") return;
+
+    if (string.length > length) {
+      return "higher"; // Simple, if it is higher than collapsedNumWord, then change the state of the button and expanded, and show first 20 characters with ... at the end
+    } else return "lower"; // Show whole children prop
+  }
+  return (
+    // USe the splitting function, show first 20 letters in the immutable way
+
+    <div className={className}>
+      {/* {Array.from({ length: 20 }, (_, i) => (
+        <p key={i}>{i}</p>
+      ))} */}
+      <p>{showSplitText(children, collapsedNumWords)}</p>
+      <button onClick={handleExpanding}>
+        {expanded ? collapseButtonText : expandButtonText}
+      </button>
+    </div>
+  );
 }
