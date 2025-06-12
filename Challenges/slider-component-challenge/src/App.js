@@ -39,7 +39,7 @@ function TextExpander({
   collapsedNumWords = 20,
   expandButtonText = "Show text",
   collapseButtonText = "Collapse text",
-  buttonColor = "white",
+  buttonColor = "blue",
   className = "box",
   children,
 }) {
@@ -48,9 +48,11 @@ function TextExpander({
   const childrenWords = childrenString.trim().split(" ");
 
   const buttonStyle = {
-    backgroundColour: buttonColor,
+    color: buttonColor,
+    backgroundColor: "transparent",
+    border: "0px",
+    cursor: "pointer",
   };
-
   function handleExpanding() {
     setExpanded((expanded) => !expanded);
   }
@@ -59,23 +61,20 @@ function TextExpander({
   //   if (typeof string === !"string") return;
 
   //   if (string.length > length) {
-  //     // Use slice to show first 20 letters conditionally, but that makes it mutable?>
+  //     // Use slice to show first 20 letters conditionally
   //     return string.slice(0, collapsedNumWords); // Simple, if it is higher than collapsedNumWord, then change the state of the button and expanded, and show first 20 characters with ... at the end
   //   } else return string; // Show whole children prop
   // }
   return (
     <div className={className}>
-      {/* {Array.from({ length: 20 }, (_, i) => (
-        <p key={i}>{i}</p>
-      ))} */}
       <p>
         {expanded
           ? childrenString
-          : childrenWords.slice(0, collapsedNumWords).join(" ") + "..."}
+          : childrenWords.slice(0, collapsedNumWords).join(" ") + "..."}{" "}
+        <button style={buttonStyle} onClick={handleExpanding}>
+          {expanded ? collapseButtonText : expandButtonText}
+        </button>
       </p>
-      <button onClick={handleExpanding}>
-        {expanded ? collapseButtonText : expandButtonText}
-      </button>
     </div>
   );
 }

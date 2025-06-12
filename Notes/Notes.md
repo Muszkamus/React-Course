@@ -2930,3 +2930,213 @@ StartRating.propTypes = {
 ```
 
 ---
+
+# <centre> Section 11. **How React works behind the Scenes**
+
+---
+
+# 124. **Components, Instances, and Elements**
+
+| Term                   | Description                                                                                                                                |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Component**          | - A blueprint or template for a piece of UI <br> - Defined as a function that returns React elements                                       |
+| **Component Instance** | - Created when a component is used/rendered <br> - A real, working copy of the component <br> - Has its own **state** and **props**        |
+| **React Element**      | - A plain object returned by `React.createElement()` or JSX <br> - Describes what should appear on screen <br> - Immutable and lightweight |
+| **DOM Element**        | - The actual element rendered in the browser <br> - Created from React elements by the React DOM renderer                                  |
+
+---
+
+# 126. **How Rendering Works: Overview**
+
+---
+
+### Render Triggered
+
+Render is triggered when:
+
+- A component mounts (initial render)
+- State is updated in one or more component instances (re-render)
+- A parent component re-renders
+
+### Render Phase
+
+- React calls component functions
+- It figures out how the DOM should be updated (creates a virtual DOM and diffs it)
+
+### Commit Phase
+
+- React writes to the DOM:
+  - Updates elements
+  - Inserts or deletes elements
+- Also runs lifecycle effects like `useEffect`
+
+### Browser Paint
+
+- The browser renders the updated DOM to the screen
+
+---
+
+# 127. **How Rendering Works: The Render Phase**
+
+---
+
+## The Render Phase
+
+- **Initial render**: A virtual DOM is created — a tree of all React elements from all instances in the component tree.
+- This process is **cheap and fast**, allowing multiple trees to be created quickly.
+- This has **nothing to do with the Shadow DOM**.
+
+![alt text](image-11.png)
+
+### Child Component Rendering
+
+- Rendering a component will also **render all its children**, regardless of whether their props changed or not.
+
+### Why not update the entire DOM when state changes?
+
+- **Answer**: Because writing to the DOM is **relatively slow**.
+- In most cases, **only a part of the DOM** needs to be updated.
+
+### How does React avoid unnecessary DOM updates?
+
+- **React reuses as much of the existing DOM as possible**.
+
+#### The process is called **Reconciliation**:
+
+- React determines which DOM elements need to be **inserted**, **updated**, or **deleted**, based on the **latest state changes**.
+
+## The Fiber Architecture
+
+- React builds a special internal structure called the **Fiber Tree**.
+
+![alt text](image-12.png)
+
+### Key points about the Fiber Tree:
+
+- Each **fiber** represents a component instance or a DOM element.
+- Fibers are **not recreated on every render**.
+- Work can be done **asynchronously**.
+- Rendering is split into **chunks** that can be **paused, reused, or thrown away**.
+- Enables features like **concurrent rendering** and **suspense**.
+
+## Reconciliation in Action
+
+- When state updates, a new **virtual DOM** is generated.
+- React **compares** it to the previous fiber tree.
+- Then it **commits** only the necessary changes to the real DOM.
+
+![alt text](image-13.png)
+
+---
+
+# 128. **How Rendering Works: The Commit Phase**
+
+---
+
+1. List of DOM updates > Updated DOM
+
+React writes to the DOM: insertions, deletions, and updates (list of DOM updates are "flushed" to the DOM)
+Commiting is synchronous: DOM us updated in one go, it can't be interrupted. This is necessary so that DOM never shows partial results, ensuring a consistent UI (in sync with state at all times).
+After the commit phase compleets, the workInProgress fiber tree becomes the current tree for the next render cycle.
+
+![alt text](image-14.png)
+
+## [1] Trigger 🔥
+
+- Rendering is triggered:
+  - On the **initial render**
+  - When **state or props update**
+- Updated React elements are created from component functions.
+
+---
+
+## [2] Render Phase
+
+- React builds a **new Virtual DOM** based on the updated React elements.
+- Compares it with the **current Fiber Tree**.
+- **Reconciliation + Diffing**:
+  - Determines what changed
+  - Prepares a list of changes to apply to the real DOM
+
+### Notes:
+
+- The render phase **does not produce any visual output**.
+- Rendering a component will also **render all its child components**.
+- This phase can be:
+  - **Asynchronous** – work can be split, paused, resumed, or prioritized.
+  - **Synchronous** – updates written all at once to keep UI consistent.
+
+---
+
+## [3] Commit Phase
+
+- React writes the **DOM updates** to the actual browser DOM.
+
+---
+
+## [4] Browser Paint
+
+- Browser takes the updated DOM and **renders the updated UI** on screen.
+
+![alt text](image-15.png)
+
+---
+
+# 129. **How Diffing Works**
+
+---
+
+---
+
+## What is the `key` Prop?
+
+![alt text](image-16.png)
+
+- A special prop that helps React's diffing algorithm **identify unique elements**.
+- Helps React **distinguish** between different instances of the same component type.
+- If the `key` **stays the same** across renders:
+  - The element will be **preserved** in the DOM, even if its position changes.
+- If the `key` **changes**, the element will be **destroyed and recreated**, even if its position stays the same.
+
+---
+
+## 1. Keys in Lists – `[Stable Key]`
+
+![alt text](image-17.png)
+
+### Without Keys:
+
+- Elements are treated as new when the list changes.
+- React may re-render or recreate DOM nodes unnecessarily.
+- **Bad for performance**.
+
+### With Keys:
+
+- Each item is uniquely identified.
+- React reuses elements efficiently.
+- Improves **performance** and avoids UI bugs.
+
+🟡 **Always use keys when rendering lists**.
+
+---
+
+## 2. Key Prop to Reset State – `[Changing Key]`
+
+### Problem:
+
+![alt text](image-19.png)
+
+- React preserves component **state** if the element stays in the same position with the same key.
+
+### Solution:
+
+![alt text](image-18.png)
+
+- Change the `key` when you want React to **reset the state** of a component.
+
+✅ Use a **different key** if:
+
+- You want to force React to **recreate** the component.
+- You need to **reset local state**, like form inputs.
+
+---

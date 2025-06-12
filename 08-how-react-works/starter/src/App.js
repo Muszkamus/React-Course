@@ -57,7 +57,8 @@ function Tab({ num, activeTab, onClick }) {
     </button>
   );
 }
-
+// console.log(<DifferentContent test={23} />);
+// console.log(DifferentContent()); // big no no, it will read as div itself, states hooks will not work, any props might be not working.
 function TabContent({ item }) {
   const [showDetails, setShowDetails] = useState(true);
   const [likes, setLikes] = useState(0);
