@@ -39,7 +39,10 @@ function Tabbed({ content }) {
       </div>
 
       {activeTab <= 2 ? (
-        <TabContent item={content.at(activeTab)} />
+        <TabContent
+          item={content.at(activeTab)}
+          key={content.at(activeTab).summary} // React can now distinguish different tabs
+        />
       ) : (
         <DifferentContent />
       )}
@@ -63,8 +66,32 @@ function TabContent({ item }) {
   const [showDetails, setShowDetails] = useState(true);
   const [likes, setLikes] = useState(0);
 
+  // console.log("Render");
   function handleInc() {
-    setLikes(likes + 1);
+    // setLikes(likes + 1);
+    setLikes((likes) => likes + 1); // Better to use callBack functions
+  }
+
+  function handleTripleInc() {
+    // setLikes(likes + 1); // 0 + 1
+    // setLikes(likes + 1); // 0 + 1
+    // setLikes(likes + 1); // 0 + 1,
+    // // The value overall will be 1
+
+    setLikes((likes) => likes + 1); // CallBack function
+    setLikes((likes) => likes + 1);
+    setLikes((likes) => likes + 1);
+    // this trick will get access to the latest updated state
+  }
+
+  function handleUndo() {
+    setShowDetails(true);
+    setLikes(0); // Anything to do with states is asynchronous
+    console.log(likes); // This will log before the above, this is synchronous. So if we change states, and call function, we will get the old value
+  }
+
+  function handleUndoLater() {
+    setTimeout(handleUndo, 2000);
   }
 
   return (
@@ -80,13 +107,13 @@ function TabContent({ item }) {
         <div className="hearts-counter">
           <span>{likes} ❤️</span>
           <button onClick={handleInc}>+</button>
-          <button>+++</button>
+          <button onClick={handleTripleInc}>+++</button>
         </div>
       </div>
 
       <div className="tab-undo">
-        <button>Undo</button>
-        <button>Undo in 2s</button>
+        <button onClick={handleUndo}>Undo</button>
+        <button onClick={handleUndoLater}>Undo in 2s</button>
       </div>
     </div>
   );

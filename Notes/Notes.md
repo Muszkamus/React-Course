@@ -3140,3 +3140,122 @@ After the commit phase compleets, the workInProgress fiber tree becomes the curr
 - You need to **reset local state**, like form inputs.
 
 ---
+
+# 134. **Rules for Render Logic: Pure Components**
+
+---
+
+Two types of logic
+
+1: Render Logic-
+
+- Code that lives at the top level of the component function
+- Participates in describing how the component view looks like
+
+2: Event Handles Functions
+
+- Executed as a consequence of the event that the handler is listening for (change event in this example)
+- Code that actually does things: update state, perform an HTTP request, read an input field, navigate to another page etc.
+
+**Side Effect:** Dependancy on or modification of any data outside the function scope. Interaction with the outside world. Examples: mutating external variables, HTTP requests, writing to DOM.
+
+```js
+const areas = {};
+
+function circleArea(r) {
+  areas.circle = 3.14 * r * r;
+}
+```
+
+**Pure function:** A function that has no side effects.
+
+```js
+function circlearea(r) {
+  return 3.14 * r * r;
+}
+```
+
+- Does not change any variables outside its scope.
+- Given the same input, a pure function always returns the same output.
+
+☝️ Components must be pure when it comes to render logic: given the same props (input), a component instance should alwas return the same JSC (output).
+☝️ Render logic must produce no side effects: no interaction with the "outside world" is allowed. So in Render logic
+
+- Do NOT perform network requests (API calls)
+- Do NOT start timers
+- Do NOT directly use the DOM API
+- Do NOT mutate objects or variables outside of the function scope
+- Do NOT update state (or refs): This will create infinite loops
+
+---
+
+# 135. **State Update Batching**
+
+---
+
+```js
+const [answer, setAnswer] = useState("");
+const [best, setBest] = useState(true);
+const [solved, setSolved] = useState(false);
+
+const reset = function () {
+  setAnswer("");
+  console.log(answer);
+  setBest(true);
+  setSolved(false);
+};
+```
+
+![alt text](image-20.png)
+![alt text](image-21.png)
+![alt text](image-22.png)
+
+---
+
+# 137. **How Events Work in React**
+
+![alt text](image-23.png)
+
+```js
+// Select the parent container
+const optionsContainer = document.querySelector(".options");
+
+// Attach ONE event listener to the parent
+optionsContainer.addEventListener("click", function (e) {
+  // Check if the clicked element is a button
+  if (e.target.matches(".btn")) {
+    console.log(`You clicked: ${e.target.textContent}`);
+    e.target.style.backgroundColor = "#ffc107"; // Just a visual feedback
+  }
+});
+```
+
+![alt text](image-24.png)
+![alt text](image-25.png)
+
+---
+
+# 138. **Libraries vs. Frameworks & The React Ecosystem**
+
+---
+
+![alt text](image-26.png)
+![alt text](image-27.png)
+![alt text](image-28.png)
+
+---
+
+# 139. **Section Summary: Practical Takeaways**
+
+1. A component is like a blueprint for a piece of UI that will eventually exist on the screen. When we "use" a component, React creates a component instance, which is like an actual physical manifestation of a component, containining props, state, and more. A component instance, when rendered, will return a React elemenet.
+2. Rendering only means calling component functions and caluclating what DOM elements need to be inserted, deleted, or updated. It has nothing to do with writing to the DOM. Therefore, each time a component instance is rendered and re-rendered, the function is called again.
+3. Only the initial app render and state updates can cause a render, which happens for the entire application, not just one single component.
+4. When a component instance get re-rendered, all its children will get re-rendered as well. This doesnt mean that all children will get updated in the DOM, thanks to reconciliation, which checks which elements have actually changed between two renders. But all this re-rendering can still have an impact on performance.
+5. Diffing is how React decides which DOM elements need to be added or modified. If, between renders, a certain React element stays at the same position in the element tree, the corresponding DOM element and component state will stay the same. If the element changed to a different position, or if it’s a different element type, the DOM element and state will be destroyed and rebuilt.
+6. Giving elements a key prop allows React to distinguish between multiple component instances. When a key stays the same across renders, the element is kept in the DOM. This is why we need to use keys in lists. When we change the key between renders, the DOM element will be destroyed and rebuilt. We use this as a trick to reset state.
+7. Never declare a new component inside another component! Doing so will re-create the nested component every time the parent component re-renders. React will always see the nested component as new, and therefore reset its state each time the parent state is updated.
+8. The logic that produces JSX output for a component instance (“render logic”) is not allowed to produce any side effects: no API calls, no timers, no object or variable mutations, no state updates. Side effects are allowed in event handlers and useEffect (next section 👉).
+9. The DOM is updated in the commit phase, but not by React, but by a “renderer” called ReactDOM. That’s why we always need to include both libraries in a React web app project. We can use other renderers to use React on different platforms, for example to build mobile or native apps.
+10. Multiple state updates inside an event handler function are batched, so they happen all at once, causing only one re-render. This means we can not access a state variable immediately after updating it: state updates are asynchronous. Since React 18, batching also happens in timeouts, promises, and native event handlers.
+11. When using events in event handlers, we get access to a synthetic event object, not the browser’s native object, so that events work the same way across all browsers. The difference is that most synthetic events bubble, including focus, blur, and change, which do not bubble as native browser events. Only the scroll event does not bubble.
+12. React is a library, not a framework. This means that you can assemble your application using your favorite third-party libraries. The downside is that you need to find and learn all these additional libraries. No problem, as you will learn about the most commonly used libraries in this course.
