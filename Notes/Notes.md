@@ -3229,7 +3229,7 @@ Two types of logic
 - Executed as a consequence of the event that the handler is listening for (change event in this example)
 - Code that actually does things: update state, perform an HTTP request, read an input field, navigate to another page etc.
 
-**Side Effect:** Dependancy on or modification of any data outside the function scope. Interaction with the outside world. Examples: mutating external variables, HTTP requests, writing to DOM.
+**Side Effect:** dependency on or modification of any data outside the function scope. Interaction with the outside world. Examples: mutating external variables, HTTP requests, writing to DOM.
 
 ```js
 const areas = {};
@@ -3336,7 +3336,7 @@ optionsContainer.addEventListener("click", function (e) {
 1. A component is like a blueprint for a piece of UI that will eventually exist on the screen. When we "use" a component, React creates a component instance, which is like an actual physical manifestation of a component, containining props, state, and more. A component instance, when rendered, will return a React elemenet.
 2. Rendering only means calling component functions and caluclating what DOM elements need to be inserted, deleted, or updated. It has nothing to do with writing to the DOM. Therefore, each time a component instance is rendered and re-rendered, the function is called again.
 3. Only the initial app render and state updates can cause a render, which happens for the entire application, not just one single component.
-4. When a component instance get re-rendered, all its children will get re-rendered as well. This doesnt mean that all children will get updated in the DOM, thanks to reconciliation, which checks which elements have actually changed between two renders. But all this re-rendering can still have an impact on performance.
+4. When a component instance get re-rendered, all its children will get re-rendered as well. This doesn't mean that all children will get updated in the DOM, thanks to reconciliation, which checks which elements have actually changed between two renders. But all this re-rendering can still have an impact on performance.
 5. Diffing is how React decides which DOM elements need to be added or modified. If, between renders, a certain React element stays at the same position in the element tree, the corresponding DOM element and component state will stay the same. If the element changed to a different position, or if it’s a different element type, the DOM element and state will be destroyed and rebuilt.
 6. Giving elements a key prop allows React to distinguish between multiple component instances. When a key stays the same across renders, the element is kept in the DOM. This is why we need to use keys in lists. When we change the key between renders, the DOM element will be destroyed and rebuilt. We use this as a trick to reset state.
 7. Never declare a new component inside another component! Doing so will re-create the nested component every time the parent component re-renders. React will always see the nested component as new, and therefore reset its state each time the parent state is updated.
@@ -3583,3 +3583,47 @@ function ErrorMessage({ message }) {
   );
 }
 ```
+
+---
+
+# 148. **The useEffect Dependency Array**
+
+---
+
+### The dependency Array
+
+- By default. effects run after every render. We can prevent that by passing a dependency array.
+- Without dependency array, React doesn't know when to run the effect.
+- Each time one of the dependancies changes, the effect will be executed again.
+- Every state variable and prop used inside the effect MUST be included in the dependency array.
+
+### UseEffect is a synchronisation mechanism
+
+- useEffect is like an event listener that is listening for one dependency to change. Whenever a dependency changes, it will execute the effect again.
+
+### Synchronisation and lifecycle
+
+- We can use the dependency array to run effects when the component renders or re-renders
+
+```js
+useEffect(fn, [x, y, z]); // Effect synchronises with x,y,z > Runs on mount and re-renders by updating x,y,z
+useEffect(fn, []); // Effect synchronises with no state/props > Run only on mount (initial render)
+useEffect(fn); // Effect synchronises with everything > Runs on every render (Usually bad)
+```
+
+### When Are Effects Executed in React?
+
+### Initial Mount (`<MovieDetails />`)
+
+1. **MOUNT** → component is first added to the DOM
+2. **COMMIT** → DOM updates are applied
+3. **BROWSER PAINT** → screen is updated visually
+4. **`useEffect()` runs** ✨ (after paint)
+
+```js
+useEffect(() => {
+  document.title = `${title} ${userRating && `(Rated ${userRating}) ✨`}`;
+}, [title, userRating]);
+```
+
+---
