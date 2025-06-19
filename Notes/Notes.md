@@ -1,4 +1,6 @@
+<!-- markdownlint-disable MD001 -->
 <!-- markdownlint-disable MD025 -->
+<!-- markdownlint-disable MD026 -->
 <!-- markdownlint-disable MD033 -->
 
 # <center> **Section 3: A first look at React**
@@ -2634,6 +2636,27 @@ Prop drilling happens when you pass data (via props) from a top-level component 
 
 - Reduces reusability: Components become tightly coupled to specific data paths.
 
+```js
+// App → Parent → Child → Grandchild (only Grandchild needs the user)
+
+export default function App() {
+  const user = { name: "Radek", role: "Developer" };
+  return <Parent user={user} />;
+}
+
+function Parent({ user }) {
+  return <Child user={user} />;
+}
+
+function Child({ user }) {
+  return <Grandchild user={user} />;
+}
+
+function Grandchild({ user }) {
+  return <p>Hello, {user.name}!</p>;
+}
+```
+
 ---
 
 # 111. **Component Composition**
@@ -2783,6 +2806,55 @@ export default function StartRating({ maxRating = 5 }) {
 ---
 
 ```js
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { useState } from "react";
+// import "./index.css";
+// import App from "./App";
+
+import StarRating from "./StarRating";
+function Test() {
+  const [movieRating, setmMovieRating] = useState(0);
+  return (
+    <div>
+      <StarRating
+        color="blue"
+        maxRating={10}
+        // We pass setMovieRating as the onSetRating prop.
+        // This allows the StarRating component to update state in the parent (Test) when a star is clicked.
+        // Inside StarRating, calling onSetRating(rating) triggers setMovieRating(rating) here.
+        // State name is const [rating, setRating] = useState(defaultRating);
+
+        onSetRating={setmMovieRating}
+      />
+      <p> This movie was rated {movieRating} stars</p>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    {/* <App /> */}
+
+    <StarRating
+      maxRating={5}
+      messages={["Terrible", "Bad", "Okay", "Good", "Amazing"]}
+      defaultRating={3}
+    />
+
+    <StarRating
+      maxRating={5}
+      color={"green"}
+      size={20}
+      messages={["Terrible", "Bad", "Okay", "Good", "Amazing"]}
+      defaultRating={3}
+    />
+
+    <Test />
+  </React.StrictMode>
+);
+
 import { useState } from "react";
 
 const containerStyle = {
@@ -3233,6 +3305,20 @@ optionsContainer.addEventListener("click", function (e) {
 ![alt text](image-24.png)
 ![alt text](image-25.png)
 
+## 🔹 Synthetic Events in React
+
+- React wraps native DOM events into **SyntheticEvent** for cross-browser consistency.
+- Has the **same interface** as native events (e.g., `stopPropagation()`, `preventDefault()`).
+- Ensures events work **the same across all browsers**.
+- **Most events bubble** like native ones (`focus`, `blur`, `change`), except `scroll`.
+- Example: `<input onChange={(e) => setText(e.target.value)} />`
+
+### 🆚 Event Handlers in React vs JS
+
+- Use **camelCase**: `onClick` instead of `onclick` or `click`.
+- **Must use `preventDefault()`** to stop default behavior — returning `false` won't work.
+- Use `onClickCapture` for **capture phase** instead of bubbling.
+
 ---
 
 # 138. **Libraries vs. Frameworks & The React Ecosystem**
@@ -3259,3 +3345,241 @@ optionsContainer.addEventListener("click", function (e) {
 10. Multiple state updates inside an event handler function are batched, so they happen all at once, causing only one re-render. This means we can not access a state variable immediately after updating it: state updates are asynchronous. Since React 18, batching also happens in timeouts, promises, and native event handlers.
 11. When using events in event handlers, we get access to a synthetic event object, not the browser’s native object, so that events work the same way across all browsers. The difference is that most synthetic events bubble, including focus, blur, and change, which do not bubble as native browser events. Only the scroll event does not bubble.
 12. React is a library, not a framework. This means that you can assemble your application using your favorite third-party libraries. The downside is that you need to find and learn all these additional libraries. No problem, as you will learn about the most commonly used libraries in this course.
+
+---
+
+# Section 12: **Effects and Data Fetching**
+
+---
+
+# 141. **The Component Lifecycle**
+
+---
+
+### Mount/Initial Render
+
+- Component instance is rendered for the first time
+- Fresh state and props are created
+
+### Re-Render (optional)
+
+- State changes
+- Props change
+- Parent re-renders
+- Context changes
+
+### Unmount
+
+- Component instance is destroyed and removed
+- State and props are destroyed
+
+---
+
+# 142. **How NOT to Fetch Data in React**
+
+---
+
+```js
+export default function App() {
+  const [watched, setWatched] = useState(tempWatchedData);
+  const [movies, setMovies] = useState(tempMovieData);
+
+  // ❌ BAD: This fetch runs on every render! (infinite loop risk if state updates trigger re-renders)
+  fetch(`http://www.omdbapi.com/?apikey=${OMBDAPIKey}&s=interstellar`)
+    .then((res) => res.json())
+    .then((data) => setMovies(data.Search)); // ❌ Causes re-render, which re-runs fetch again...
+
+  return (
+    // JSX output
+  );
+}
+
+```
+
+---
+
+# 143. **useEffect to the rescue**
+
+---
+
+```js
+const [movies, setMovies] = useState([]);
+const [watched, setWatched] = useState([]);
+
+// useEffect runs once on initial render (componentDidMount)
+useEffect(function () {
+  // fetch data from API when component mounts
+  fetch(`http://www.omdbapi.com/?apikey=${OMBDAPIKey}&s=interstellar`)
+    .then((res) => res.json())
+    .then((data) => setMovies(data.Search)); // update state with results
+}, []); // empty dependency array = run only once
+```
+
+---
+
+# 144. **A First Look at Effects**
+
+---
+
+### Review: A Side effect:
+
+- Basically any interaction between a React component and the world outside the component. We can also think of a side as "code that actually does something". **Examples**: Data fetching, setting up subscriptions, setting up timers, manually accessing the DOM, etc.
+
+Note: Side effects should not be in render logic at all as they are not part of UI.
+
+1. Event Handlers (preferred)
+
+```js
+function handleClick() {
+  fetch(`website/home`)
+    .then((res) => res.json())
+    .then((data) => setMovies(data.Search));
+}
+```
+
+- Executed when the corresponding event happens
+- Used to react to an event
+
+2. Effects
+
+```js
+useEffect(function () {
+  fetch(`website/home`)
+    .then((res) => res.json())
+    .then((data) => setMovies(data.Search));
+
+  return () => console.log("Cleanup"); // Cleanup function- This runs when the component unmounts or before the effect re-runs.
+}, []); // Dependency array
+```
+
+- Executed after the component mounts (initial render), and after subsequent re-renders (according to dependency array)
+
+- Used to keep component synchronised with some external system (in this example, with the API movie data)
+
+---
+
+# 145. **Using an async Function**
+
+---
+
+```js
+export default function App() {
+const [movies, setMovies] = useState([]);
+const [watched, setWatched] = useState([]);
+
+useEffect(function () {
+async function fetchMovies() {
+const res = await fetch(
+`http://www.omdbapi.com/?apikey=${OMBDAPIKey}&s=${query}`
+);
+const data = await res.json();
+setMovies(data.Search);
+}
+fetchMovies();
+}, []);
+```
+
+---
+
+# 146. **Adding a Loading State**
+
+---
+
+```js
+const [isLoading, setIsLoading] = useState(false);
+
+useEffect(function () {
+  async function fetchMovies() {
+    try {
+      setIsLoading(true);
+      const res = await fetch(
+        `http://www.omdbapi.com/?apikey=${OMBDAPIKey}&s=${query}`
+      );
+
+      if (!res.ok) {
+        throw new Error("something went wrong");
+      }
+      const data = await res.json();
+      setMovies(data.Search);
+      setIsLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  fetchMovies();
+}, []);
+
+<Box>{isLoading ? <Loader /> : <MovieList movies={movies} />}</Box>;
+
+function Loader() {
+  return (
+    <div>
+      <p className="loader">Loading...</p>
+    </div>
+  );
+}
+```
+
+---
+
+# 147. **Handling Errors**
+
+---
+
+```js
+export default function App() {
+  const [movies, setMovies] = useState([]);
+  const [watched, setWatched] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(function () {
+    async function fetchMovies() {
+      try { //TRY block = run code that might fail (e.g., API call, JSON parsing)
+        setIsLoading(true);
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${OMBDAPIKey}&s=${query}`
+        );
+        if (!res.ok) throw new Error("something went wrong");
+        const data = await res.json();
+        if (data.Response === "False") throw new Error("Movie not found"); //Response is not universal — it's a custom field used by specific APIs like OMDb, so always check the API's documentation or log the response to see which fields indicate success or error.
+        setMovies(data.Search);
+      } catch (err) {
+
+        // CATCH block = handle all errors in one place (network issues, logic errors, etc.)
+      // Set error state, show message, optionally report/log error
+        setError(err.message);
+      } finally {
+         // FINALLY block = always runs, success or error
+      // Ideal for cleanup or resetting loading state
+        setIsLoading(false);
+      }
+    }
+    fetchMovies();
+  }, []);
+
+
+  <Box error={error}>
+    {/* {isLoading ? <Loader /> : <MovieList movies={movies} />} */}
+    {isLoading && <Loader />}
+    {!isLoading && !error && <MovieList movies={movies} />}
+    {error && <ErrorMessage message={error} />}
+</Box>
+
+
+function Loader() {
+  return (
+    <div>
+      <p className="loader">Loading...</p>
+    </div>
+  );
+}
+
+function ErrorMessage({ message }) {
+  return (
+    <p className="error">
+      <span>⭕</span> {message}
+    </p>
+  );
+}
+```
