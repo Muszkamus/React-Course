@@ -80,16 +80,21 @@ export default function App() {
       </select>
       <SwapButton handleSwap={handleSwap} />
 
-      <Output calculateRate={calculateRate} />
+      <Output
+        calculateRate={calculateRate}
+        fromCurrency={fromCurrency}
+        userAmountInput={userAmountInput}
+        toCurrency={toCurrency}
+      />
     </div>
   );
 }
 
-function Output({ calculateRate }) {
+function Output({ calculateRate, fromCurrency, toCurrency, userAmountInput }) {
   const formatting = calculateRate.toFixed(4);
   return (
     <div>
-      <p>{formatting}</p>
+      <p>{`${userAmountInput} ${fromCurrency} ➡️ ${formatting} ${toCurrency}`}</p>
     </div>
   );
 }
