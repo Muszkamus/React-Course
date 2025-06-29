@@ -4201,3 +4201,146 @@ function WatchedMovie({ movie, onDeleteWatched }) {
   );
 }
 ```
+
+---
+
+# <center> Section 13: **Custom Hooks, Refs, and More State**
+
+---
+
+# 160. **React Hooks and Their Rules**
+
+---
+
+### React Hooks
+
+There used for Manual DOM selections, creating and accessing state from Fiber Tree, registering side effects from Fiber Tree and
+
+- Always start with "use" = useState, useEffect
+
+- Enable easy reusing of non-visual logic: we can compose multiple hooks into our own custom hooks.
+- Give function components the ability to own state and run side effects at different lifecycle points
+
+### Rules of hooks
+
+- Only call hooks at the top level: Do not call hooks inside conditionals, loops or nested functions.
+- Only call hooks from React functions
+
+---
+
+# 163. **Initializing State With a Callback (Lazy Initial State)**
+
+---
+
+```js
+import { useState, useEffect } from "react";
+
+// ✅ 1) Initialize state with localStorage fallback
+const [watched, setWatched] = useState(function () {
+  const storedValue = localStorage.getItem("watched");
+  return storedValue ? JSON.parse(storedValue) : [];
+});
+
+// ✅ 2) Whenever state changes, update localStorage
+useEffect(() => {
+  localStorage.setItem("watched", JSON.stringify(watched));
+}, [watched]);
+```
+
+---
+
+# 164. **useState Summary**
+
+---
+
+### 1️⃣ Creating State
+
+- **Simple value:**
+
+```js
+const [count, setCount] = useState(23);
+```
+
+- **Lazy initialization (function):**
+
+```js
+const [count, setCount] = useState(() => LocalStorage.getItem("count"));
+```
+
+### 2️⃣ Updating State
+
+- **Simple update:**
+
+```js
+setCount(1000);
+```
+
+- **Based on current state:**
+
+```js
+setCount((c) => c + 1);
+```
+
+- Must be pure
+
+---
+
+# 166. **Introducing Another Hook: useRef**
+
+---
+
+- Box with mutable .current property that is persisted across renders.
+
+### Two big cases
+
+1. Creating a variable that stays the same between renders e.g. previous state, setTimeout id, etc.
+2. Selecting and storing DOM elements.
+
+Refs are for data that is not rendered: usually only appear in event handles or effects, not in JSX (use state).
+Do not read or write .current in render logic (like state)
+
+---
+
+# 167. **Refs to Select DOM Elements**
+
+---
+
+```js
+function Search({ query, setQuery }) {
+  // useRef holds a reference to the input DOM element — stays the same between renders
+  const inputEl = useRef(null);
+
+  useEffect(
+    function () {
+      function callback(e) {
+        // If input is already focused, do nothing
+        if (document.activeElement === inputEl.current) return;
+
+        if (e.code === "Enter") {
+          // Focus the input and clear query when Enter is pressed
+          inputEl.current.focus();
+          setQuery("");
+        }
+      }
+      document.addEventListener("keydown", callback);
+
+      // ✅ Cleanup: remove listener on unmount
+      return () => document.removeEventListener("keydown", callback);
+    },
+    [setQuery]
+  );
+
+  return (
+    <input
+      className="search"
+      type="text"
+      placeholder="Search movies..."
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+      ref={inputEl} // useRef gives direct access to this input element
+    />
+  );
+}
+```
+
+---
