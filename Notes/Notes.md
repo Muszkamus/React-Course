@@ -4344,3 +4344,53 @@ function Search({ query, setQuery }) {
 ```
 
 ---
+
+# 169. What are Custom Hooks? When to Create One?
+
+---
+
+## 🔄 Reusing Logic with Custom Hooks
+
+### 🧩 When to Use a Custom Hook
+
+- If you need to **reuse non-visual logic** in multiple components.
+- Does the logic contain any **React hooks** (`useState`, `useEffect`)?
+  - ✅ YES → Use a **Custom Hook**
+  - ❌ NO → Use a **Regular Function**
+
+---
+
+### ✅ Custom Hook Rules
+
+- Must **start with `use`** (e.g., `useFetch`)
+- Must use **at least one** React hook inside
+- Follows the **Rules of Hooks**: Only call hooks at the top level, not conditionally.
+- Should have **one clear purpose**, to stay **reusable and portable**
+
+---
+
+### 🧑‍💻 Example: `useFetch` Hook
+
+```js
+function useFetch(url) {
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(
+    function () {
+      fetch(url)
+        .then((res) => res.json())
+        .then((res) => setData(res));
+    },
+    [url]
+  );
+
+  return [data, isLoading];
+}
+```
+
+---
+
+# 170. **Creating our First Custom Hook: useMovies**
+
+---
