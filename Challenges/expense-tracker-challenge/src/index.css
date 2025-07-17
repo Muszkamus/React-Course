@@ -1,0 +1,30 @@
+.app {
+  display: flex;
+  align-items: flex-start;
+}
+
+.row {
+  background-color: rgb(245, 245, 245);
+  display: flex;
+
+  justify-content: space-between;
+
+  margin: 20px;
+  width: 600px;
+  height: auto;
+}
+
+.cell {
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+  border-style: solid;
+  border-color: rgb(0, 0, 0);
+}
+
+.addExpenseBox {
+  width: 300px;
+  height: 300px;
+  border-style: solid;
+  border-color: black;
+}
