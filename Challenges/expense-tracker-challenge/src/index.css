@@ -3,23 +3,14 @@
   align-items: flex-start;
 }
 
-.row {
-  background-color: rgb(245, 245, 245);
-  display: flex;
-
-  justify-content: space-between;
-
-  margin: 20px;
-  width: 600px;
-  height: auto;
-}
-
 .cell {
   display: flex;
   justify-content: center;
-  flex-grow: 1;
-  border-style: solid;
-  border-color: rgb(0, 0, 0);
+  align-items: center; /* vertically centers text */
+  flex: 1; /* ensures equal width in all cells */
+  padding: 8px;
+  border: 1px solid black;
+  box-sizing: border-box;
 }
 
 .addExpenseBox {
@@ -27,4 +18,27 @@
   height: 300px;
   border-style: solid;
   border-color: black;
+}
+
+.row {
+  background-color: rgb(193, 251, 255);
+  display: flex;
+
+  justify-content: space-between;
+
+  margin: 20px 20px 0 20px;
+  width: 600px;
+  height: auto;
+}
+
+.existingExpense {
+  display: flex;
+  justify-content: space-between;
+  width: 600px;
+  margin: 0 20px 0px 20px;
+}
+
+.expenseSubmitted {
+  display: flex;
+  justify-content: center;
 }
