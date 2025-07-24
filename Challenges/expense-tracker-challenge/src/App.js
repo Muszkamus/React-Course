@@ -1,10 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const expenseHistory = [];
 
+function useLocalStorageState(initialState, key) {
+  const [value, setValue] = useState(function () {
+    const storedValue = localStorage.getItem(key);
+    return storedValue ? JSON.parse(storedValue) : initialState;
+  });
+
+  useEffect(
+    function () {
+      localStorage.setItem(key, JSON.stringify(value));
+    },
+    [value, key]
+  );
+
+  return [value, setValue];
+}
+
 // ✅ Milestone 2: Add Totals Summary
 // Goal: Show how much is being spent
-//  Calculate and display the total amount spent across all expenses.
 //  Add a Stats or TotalSummary component under Row.
 //  Optionally show total by method (Card vs Cash) or per category.
 
@@ -13,12 +28,6 @@ const expenseHistory = [];
 //  Add a ❌ delete button to each row.
 //  Create a handleDelete(id) function.
 //  Call setExpenses(expenses.filter(e => e.id !== id)) inside it.
-
-// ✅ Milestone 4: Persist Data with localStorage
-// Goal: Make expenses survive refresh
-//  On first render, check localStorage for saved expenses.
-//  If present, use them to set initial state.
-//  Use useEffect to save to localStorage every time expenses change.
 
 // ✅ Milestone 5: Add Filtering
 // Goal: Make it easier to view relevant expenses
@@ -32,9 +41,12 @@ export default function App() {
   const [method, setMethod] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
-  const [expenses, setExpenses] = useState(expenseHistory);
+  const [expenses, setExpenses] = useLocalStorageState([], expenseHistory);
   const [isExpenseAdded, setIsExpenseAdded] = useState(false);
-  console.log(expenseHistory);
+
+  const individualAmounts = expenses.map((e) => e.amount);
+  const totalAmountSpent = individualAmounts.reduce((acc, val) => acc + val, 0);
+  //const [totalAmount, setTotalAmount] = useState(totalAmountSpent);
   function addExpense(e) {
     const parsedAmount = parseFloat(amount);
     e.preventDefault();
@@ -79,9 +91,11 @@ export default function App() {
   return (
     <div className="app">
       <div className="expenseColumn">
+        <Totals totalAmountSpent={totalAmountSpent} />
         <Row />
         <ExpenseHistory expenses={expenses} />
       </div>
+
       <AddExpenseBox
         date={date}
         setDate={setDate}
@@ -96,6 +110,16 @@ export default function App() {
         addExpense={addExpense}
         isExpenseAdded={isExpenseAdded}
       />
+    </div>
+  );
+}
+
+function Totals({ totalAmountSpent }) {
+  return (
+    <div>
+      <div>
+        <p>Total amount spent: £{totalAmountSpent} </p>
+      </div>
     </div>
   );
 }
@@ -139,7 +163,7 @@ function ExpenseHistory({ expenses }) {
             <p>{expense.description}</p>
           </div>
           <div className="cell">
-            <p>{expense.amount}</p>
+            <p>£{expense.amount}</p>
           </div>
         </div>
       ))}
