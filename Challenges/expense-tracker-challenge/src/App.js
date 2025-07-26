@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 
 const expenseHistory = [];
 
@@ -19,15 +19,9 @@ function useLocalStorageState(initialState, key) {
 }
 
 // ✅ Milestone 2: Add Totals Summary
-// Goal: Show how much is being spent
+
 //  Add a Stats or TotalSummary component under Row.
 //  Optionally show total by method (Card vs Cash) or per category.
-
-// ✅ Milestone 3: Delete Functionality
-// Goal: Let users remove mistakes
-//  Add a ❌ delete button to each row.
-//  Create a handleDelete(id) function.
-//  Call setExpenses(expenses.filter(e => e.id !== id)) inside it.
 
 // ✅ Milestone 5: Add Filtering
 // Goal: Make it easier to view relevant expenses
@@ -43,10 +37,10 @@ export default function App() {
   const [amount, setAmount] = useState("");
   const [expenses, setExpenses] = useLocalStorageState([], expenseHistory);
   const [isExpenseAdded, setIsExpenseAdded] = useState(false);
-
+  const [selectedExpense, setSelectedExpense] = useState("");
   const individualAmounts = expenses.map((e) => e.amount);
   const totalAmountSpent = individualAmounts.reduce((acc, val) => acc + val, 0);
-  //const [totalAmount, setTotalAmount] = useState(totalAmountSpent);
+
   function addExpense(e) {
     const parsedAmount = parseFloat(amount);
     e.preventDefault();
@@ -93,7 +87,12 @@ export default function App() {
       <div className="expenseColumn">
         <Totals totalAmountSpent={totalAmountSpent} />
         <Row />
-        <ExpenseHistory expenses={expenses} />
+        <ExpenseHistoryLog
+          expenses={expenses}
+          setExpenses={setExpenses}
+          selectedExpense={selectedExpense}
+          setSelectedExpense={setSelectedExpense}
+        />
       </div>
 
       <AddExpenseBox
@@ -142,10 +141,21 @@ function Row() {
       <div className="cell">
         <p>Amount</p>
       </div>
+      <div className="cell">
+        <p>Remove</p>
+      </div>
     </div>
   );
 }
-function ExpenseHistory({ expenses }) {
+function ExpenseHistoryLog({
+  expenses,
+  setExpenses,
+
+  selectedExpense,
+}) {
+  function handleDelete(id) {
+    setExpenses(expenses.filter((e) => e.id !== id));
+  }
   return (
     <>
       {expenses.map((expense) => (
@@ -164,6 +174,14 @@ function ExpenseHistory({ expenses }) {
           </div>
           <div className="cell">
             <p>£{expense.amount}</p>
+          </div>
+          <div className="cell">
+            <button
+              value={selectedExpense}
+              onClick={() => handleDelete(expense.id)}
+            >
+              ❌
+            </button>
           </div>
         </div>
       ))}
