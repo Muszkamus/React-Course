@@ -4456,3 +4456,57 @@ const { movies, isLoading, error } = useMovies(query);
 ```
 
 ---
+
+# <center> **Section 16: The Advanced useReducer Hook**
+
+---
+
+# **189. Managing State With useReducer**
+
+---
+
+### State with use Reducer
+
+- An alternative way of setting state, ideal for complex state and related pieces of sets
+- Stores related pieces of **state** in a state object
+- useReducer needs **reducer**: function containing all logic to update state. Decouples state logic from component.
+- **reducer**: pure function (no side effects) that takes current state and action, and returns the next state
+- **action**: object that describes how to update state
+
+```js
+{ type: "ACTION_TYPE", payload: data }
+
+```
+
+- **dispatch**: function to trigger state updates, by "sending" actions from event handlers to the reducer
+
+```js
+dispatch({ type: "INCREMENT", payload: 1 });
+```
+
+![alt text](image-29.png)
+
+---
+
+# **190. The "React Quiz" App**
+
+---
+
+1. Add "server": "json-server --watch data/questions.json --port 8000" in package.json with data >
+
+```js
+{
+  "questions": [
+    {
+      "question": "Which is the most popular JavaScript framework?",
+      "options": ["Angular", "React", "Svelte", "Vue"],
+      "correctOption": 1,
+      "points": 10
+    },
+  ]
+}
+```
+
+2. Install dependencies > npm install json-server --save-dev
+
+3. npm run server
