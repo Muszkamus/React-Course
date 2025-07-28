@@ -6,6 +6,7 @@ import Error from "./Error";
 import StartScreen from "./StartScreen";
 import Question from "./Question";
 import Nextbutton from "./Nextbutton";
+import Progress from "./Progress";
 
 export default function App() {
   const initialState = {
@@ -50,9 +51,8 @@ export default function App() {
           answer: action.payload,
           points:
             action.payload === question.correctOption
-              ? state.points + 1
+              ? state.points + question.points
               : state.points, // Save the selected answer
-          // ✅ Keep status as "active" so UI continues to show the question
         };
       case "nextQuestion":
         return {
@@ -65,12 +65,16 @@ export default function App() {
     }
   }
 
-  const [{ questions, status, index, answer }, dispatch] = useReducer(
+  const [{ questions, status, index, answer, points }, dispatch] = useReducer(
     reducer,
     initialState
   );
 
   const numQuestions = questions.length;
+  const maxPossiblePoints = questions.reduce(
+    (prev, cur) => prev + cur.points,
+    0
+  );
 
   useEffect(function () {
     fetch("http://localhost:8000/questions")
@@ -89,6 +93,13 @@ export default function App() {
         )}
         {status === "active" && (
           <>
+            <Progress
+              index={index}
+              numQuestions={numQuestions}
+              points={points}
+              maxPossiblePoints={maxPossiblePoints}
+              answer={answer}
+            />
             <Question
               question={questions[index]}
               dispatch={dispatch}
