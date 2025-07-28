@@ -5,7 +5,7 @@ import Loader from "./Loader";
 import Error from "./Error";
 import StartScreen from "./StartScreen";
 import Question from "./Question";
-import Options from "./Options";
+import Nextbutton from "./Nextbutton";
 
 export default function App() {
   const initialState = {
@@ -54,7 +54,12 @@ export default function App() {
               : state.points, // Save the selected answer
           // ✅ Keep status as "active" so UI continues to show the question
         };
-
+      case "nextQuestion":
+        return {
+          ...state,
+          index: state.index + 1,
+          answer: null,
+        };
       default:
         throw new Error("Action unknown");
     }
@@ -83,11 +88,14 @@ export default function App() {
           <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
         )}
         {status === "active" && (
-          <Question
-            question={questions[index]}
-            dispatch={dispatch}
-            answer={answer}
-          />
+          <>
+            <Question
+              question={questions[index]}
+              dispatch={dispatch}
+              answer={answer}
+            />
+            <Nextbutton dispatch={dispatch} answer={answer} />
+          </>
         )}
       </Main>
     </div>
