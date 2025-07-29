@@ -4492,7 +4492,7 @@ dispatch({ type: "INCREMENT", payload: 1 });
 
 ---
 
-1. Add "server": "json-server --watch data/questions.json --port 8000" in package.json with data >
+1: Add "server": "json-server --watch data/questions.json --port 8000" in package.json with data >
 
 ```js
 {
@@ -4507,6 +4507,61 @@ dispatch({ type: "INCREMENT", payload: 1 });
 }
 ```
 
-2. Install dependencies > npm install json-server --save-dev
+2: Install dependencies > npm install json-server --save-dev
 
-3. npm run server
+3: npm run server
+
+---
+
+# 201. **useReducer**
+
+---
+
+```js
+import { useReducer } from "react";
+
+const initialState = {
+  // Define your state properties here
+  count: 0,
+  user: null,
+  loading: false,
+  error: null,
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "INCREMENT":
+      return {
+        ...state,
+        count: state.count + 1,
+      };
+
+    case "DECREMENT":
+      return {
+        ...state,
+        count: state.count - 1,
+      };
+
+    case "RESET":
+      return initialState;
+
+    default:
+      throw new Error(`Unknown action type: ${action.type}`);
+  }
+}
+
+export default function App() {
+  // Destructured state values
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <div>
+      {/* Example usage */}
+      <h1>Count: {state.count}</h1>
+      <button onClick={() => dispatch({ type: "INCREMENT" })}>+</button>
+      <button onClick={() => dispatch({ type: "DECREMENT" })}>-</button>
+      <button onClick={() => dispatch({ type: "RESET" })}>Reset</button>
+    </div>
+  );
+}
+```

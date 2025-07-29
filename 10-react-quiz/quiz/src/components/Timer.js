@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 function Timer({ dispatch, secondsRemaining }) {
+  // Very useful for showing time
   const mins = Math.floor(secondsRemaining / 60);
   const seconds = secondsRemaining % 60;
   useEffect(
@@ -16,6 +17,7 @@ function Timer({ dispatch, secondsRemaining }) {
   );
   return (
     <div className="timer">
+      {/* Time formatting */}
       {mins < 10 ? 0 : null}
       {mins}:{seconds < 10 ? 0 : null}
       {seconds}

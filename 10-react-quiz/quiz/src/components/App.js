@@ -13,9 +13,8 @@ import Footer from "./Footer";
 
 export default function App() {
   const initialState = {
+    //Setting initial values for the states
     questions: [],
-
-    // "loading", "error", "ready", "active", "finished"
     status: "loading",
     index: 0,
     answer: null,
@@ -25,6 +24,7 @@ export default function App() {
   };
   const SECS_PER_QUESTION = 30;
   function reducer(state, action) {
+    // Each case defines how state changes when a specific action is dispatched
     switch (action.type) {
       case "dataReceived":
         return {
@@ -100,8 +100,13 @@ export default function App() {
   }
 
   const [
+    // Destructured state values
     { questions, status, index, answer, points, highscore, secondsRemaining },
     dispatch,
+
+    // reducer — handles state transitions based on action type.
+    // initialState — sets up the initial app state.
+    // dispatch(action) — triggers a state update.
   ] = useReducer(reducer, initialState);
 
   const numQuestions = questions.length;
@@ -111,6 +116,7 @@ export default function App() {
   );
 
   useEffect(function () {
+    // Load the API on the mount
     fetch("http://localhost:8000/questions")
       .then((res) => res.json())
       .then((data) => dispatch({ type: "dataReceived", payload: data }))
