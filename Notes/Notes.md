@@ -3,7 +3,7 @@
 <!-- markdownlint-disable MD026 -->
 <!-- markdownlint-disable MD033 -->
 
-# <center> **Section 3: A first look at React**
+# <centre> **Section 3: A first look at React**
 
 ---
 
@@ -78,7 +78,7 @@ Scenario below is not really how React is done (I have no idea what's going on) 
 
 ---
 
-# <center> **Review of Esseitnal Javascript for React**
+# <centre> **Review of Esseitnal Javascript for React**
 
 ---
 
@@ -2765,7 +2765,7 @@ root.render(
 ```js
 const containerStyle = {
   display: "flex",
-  alignItems: "center",
+  alignItems: "centre",
   gap: "16px",
 };
 
@@ -2783,7 +2783,7 @@ export default function StartRating({ maxRating = 5 }) {
   // Here we are setting default value in prop, if it is not chosen in the index file
   const containerStyle = {
     display: "flex",
-    alignItems: "center",
+    alignItems: "centre",
     gap: "16px",
   };
   return (
@@ -2859,7 +2859,7 @@ import { useState } from "react";
 
 const containerStyle = {
   display: "flex",
-  alignItems: "center",
+  alignItems: "centre",
   gap: "16px",
 };
 
@@ -4204,7 +4204,7 @@ function WatchedMovie({ movie, onDeleteWatched }) {
 
 ---
 
-# <center> Section 13: **Custom Hooks, Refs, and More State**
+# <centre> Section 13: **Custom Hooks, Refs, and More State**
 
 ---
 
@@ -4457,7 +4457,7 @@ const { movies, isLoading, error } = useMovies(query);
 
 ---
 
-# <center> **Section 16: The Advanced useReducer Hook**
+# <centre> **Section 16: The Advanced useReducer Hook**
 
 ---
 
@@ -4565,3 +4565,51 @@ export default function App() {
   );
 }
 ```
+
+---
+
+# <centre> Section 17: **React Router: Building Single-Page Applications (SPA)**
+
+---
+
+# 204. **Creating Our First App With Vite: "WorldWise"**
+
+---
+
+1. npm create vite@4
+   When using this command for the first time, you will be prompted to install the Vite package. Confirm the installation by pressing enter or Y. Afterwards, you will see a prompt for the project name. Enter the project name as worldwise. Next, select the framework you want to use. Vite is a modern build tool that provides templates for different frameworks, including Vanilla JavaScript and React. Navigate to React using the arrow keys, hit enter, and then select JavaScript. That completes the setup.
+2. cd worldwise
+   npm install
+
+3. ```bash
+   npm run dev
+
+   ```
+
+4. **Configuring ESLint in Vite**
+   Create React App comes with important developer tools pre-installed, such as ESLint.
+   To configure ESLint, install the following NPM packages as dev dependencies: ESLint itself, vite-plugin-eslint, and eslint-config-react-app.
+
+   ```bash
+   npm install eslint vite-plugin-eslint eslint-config-react-app --save-dev
+   ```
+
+5. After installing the packages, create a new file called .eslintrc.json. In this file, configure ESLint to extend the default rules with the React rules that were just installed.
+
+   ```json
+   {
+     "extends": ["react-app"]
+   }
+   ```
+
+6. Next, configure the Vite project by editing vite.config.js. Import the ESLint plugin and add it to the plugins array
+
+   ```js
+   import eslint from "vite-plugin-eslint";
+
+   export default {
+     plugins: [eslint()],
+   };
+   ```
+
+---
