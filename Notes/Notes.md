@@ -4629,3 +4629,9 @@ npm install react-router-dom@6
 ```
 
 If you just install react-router-dom, it will install the latest version, which is fine for your own apps. For this project, we want to make sure we are using version 6 so that your code will work exactly the same way as mine.
+
+---
+
+# 212. **Nested Routes and Index Route**
+
+---
