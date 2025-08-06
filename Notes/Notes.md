@@ -4635,3 +4635,193 @@ If you just install react-router-dom, it will install the latest version, which 
 # 212. **Nested Routes and Index Route**
 
 ---
+
+1. Make Routes in the main app >
+
+- <BrowserRouter> → Top-level wrapper enabling routing using HTML5 history API.
+
+- <Routes> → Groups all route definitions, finds the first matching route to render.
+
+- <Route> → Defines a path and the component to render at that path.
+
+- path → URL segment to match ("cities" → /cities).
+
+- index → Means default route for its parent (e.g., /).
+
+- element → The React component (JSX) to render.
+
+- : in path → Marks a dynamic URL parameter (e.g., :id).
+
+- path="\*" → Wildcard match for all undefined URLs (404).
+
+```js
+return (
+  // BrowserRouter: Main router provider that enables routing in React.
+  // It listens to the URL and renders the matching components.
+  <BrowserRouter>
+    {/* Routes: Container for all <Route> definitions.
+        It looks for the first child <Route> that matches the URL and renders it. */}
+    <Routes>
+      {/* Route: Defines a mapping between a URL path and a React element.
+          index: Means this route is the default route for its parent path ("/").
+          element: The React component to render. */}
+      <Route index element={<Homepage />} /> {/* Default page at "/" */}
+      {/* Nested Route example: 
+          path="app": Base path for all nested routes under "/app".
+          element={<AppLayout />}: The layout/wrapper for all child routes.
+          Any <Outlet /> inside AppLayout will display nested route components. */}
+      <Route path="app" element={<AppLayout />}>
+        {/* Child Route example:
+            path="cities": Matches "/app/cities".
+            Passes props to CityList: cities array + loading state. */}
+        <Route
+          path="cities"
+          element={<CityList cities={cities} isLoading={isLoading} />}
+        />
+
+        {/* Dynamic route with URL parameter:
+            path="cities/:id": Matches "/app/cities/123".
+            ":id" is a parameter accessible via useParams(). */}
+        <Route path="cities/:id" element={<City />} />
+
+        {/* Route to countries list:
+            path="countries": Matches "/app/countries".
+            Example of wrapping a component in a <p> tag (not common in real-world). */}
+        <Route
+          path="countries"
+          element={
+            <p>
+              <CountryList cities={cities} isLoading={isLoading} />
+            </p>
+          }
+        />
+
+        {/* Route to form:
+            path="form": Matches "/app/form".
+            Renders the Form component. */}
+        <Route path="form" element={<Form />} />
+      </Route>
+      {/* Catch-all route:
+          path="*": Matches any undefined URL.
+          Typically used for 404 Not Found pages. */}
+      <Route path="*" element={<PageNotFound />} />
+    </Routes>
+  </BrowserRouter>
+);
+```
+
+2. We need to set up Link/NavLink inside these components so we can switch urls.
+
+- Link – Navigates to another route without full page reload (SPA behaviour).
+
+- NavLink – Same as Link but can automatically style the active route.
+
+- to prop – The path you want to navigate to.
+
+- className in NavLink – Can be a string or a function that receives { isActive } for dynamic styling.
+
+- Relative vs. Absolute paths – "about" (relative to current route) vs. "/about" (absolute).
+
+```js
+function PageNav() {
+  return (
+    <nav className={styles.nav}>
+      {/* Wrap Logo in NavLink so clicking it navigates to "/" (homepage) */}
+      <NavLink to="/">
+        <Logo /> {/* Logo component acts as a clickable home link */}
+      </NavLink>
+
+      {/* Navigation menu */}
+      <ul>
+        <li>
+          {/* NavLink to Pricing page - active link gets special styling automatically */}
+          <NavLink to="/pricing">Pricing</NavLink>
+        </li>
+        <li>
+          {/* NavLink to Product page */}
+          <NavLink to="/product">Product</NavLink>
+        </li>
+        <li>
+          {/* NavLink to Login page with extra CTA (Call-To-Action) styling */}
+          <NavLink to="/login" className={styles.ctaLink}>
+            Login
+          </NavLink>
+        </li>
+      </ul>
+    </nav>
+  );
+}
+```
+
+3. Inside any component, we can navigate to go next page or previous page eg. >
+
+```js
+function Form() {
+  const navigate = useNavigate();
+
+  return <button onClick={() => navigate(-1)}>Back</button>; // That will put us page back.
+}
+```
+
+4. We can use search parameters to have exact state of the URL.
+
+### Main component
+
+```js
+const [searchParams, setSearchParems] = useSearchParams();
+const lat = searchParams.get("lat");
+const lng = searchParams.get("lng");
+```
+
+### Secondary component
+
+```js
+function CityItem({ city }) {
+  const { cityName, emoji, date, id, position } = city;
+  console.log(position);
+
+  return (
+    <li>
+      <Link
+        className={styles.cityItem}
+        to={`${id}?lat=${position.lat}&lng=${position.lng}`}
+      >
+        {/* Here we assign value to the parameter that we use later */}
+      </Link>
+    </li>
+  );
+}
+```
+
+### We extract the parameters into UI
+
+```js
+const { id } = useParams();
+{
+  /* useParams is anything that comes after : from 
+    <Route path="cities/:id" element={<City />} /> */
+}
+
+const [searchParams, setSearchParems] = useSearchParams();
+const lat = searchParams.get("lat");
+const lng = searchParams.get("lng");
+
+return (
+  <>
+    <h1>City {id}</h1>
+    <p>
+      Position@ {lat}, {lng}
+    </p>;
+  </>
+);
+```
+
+---
+
+# <centre> **Section 18: Advanced State Management: The Context API**
+
+---
+
+# 222. **What is the Context API?**
+
+---
