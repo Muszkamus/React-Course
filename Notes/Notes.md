@@ -4825,3 +4825,13 @@ return (
 # 222. **What is the Context API?**
 
 ---
+
+- A system to pass data throughout the app without manually passing props down the tree.
+
+- Allows us to broadcast global state to the entire app.
+
+1. Provider – Gives all child components access to the value.
+2. Value – The data we want to make available (usually state and functions).
+3. Consumers – All components that read the provided context value.
+
+---
