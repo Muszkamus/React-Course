@@ -4835,3 +4835,63 @@ return (
 3. Consumers – All components that read the provided context value.
 
 ---
+
+# 225. **Advanced Pattern: A Custom Provider and Hook**
+
+---
+
+1: We set up PostProvider (ContextAPI component) component
+
+```js
+function PostProvider({ children }) {
+  return (
+    <PostContext.Provider
+      // Values are the the props that we would normally pass
+      value={{
+        posts: searchedPosts,
+        onAddPost: handleAddPost,
+        onClearPosts: handleClearPosts,
+        searchQuery,
+        setSearchQuery,
+      }}
+    >
+      {/* This is where we input all the components in the App.js */}
+      {children}
+    </PostContext.Provider>
+  );
+}
+
+// Below is custom function. Instead of using useContext(PostContext), we just use the function itself
+function usePosts() {
+  const context = useContext(PostContext);
+  if (context === undefined)
+    // Usually context is only within the children components, however if it is accessed at the top level, it will be undefined
+    throw new Error("PostContext was used outside of the PostProvider");
+  return context;
+}
+export { PostProvider, usePosts };
+```
+
+2: We set up ContextAPI in the Main app
+
+```js
+function App() {
+  return (
+    <section>
+      <PostProvider>
+        <Header />
+        <Main />
+        <Archive />
+        <Footer />
+      </PostProvider>
+    </section>
+  );
+}
+
+// Example of component >
+
+function Results() {
+  const { posts } = usePosts(); // Here we destructure to posts only, as this is the only prop we need here
+  return <p>🚀 {posts.length} atomic posts found</p>;
+}
+```

@@ -1,13 +1,14 @@
 import { faker } from "@faker-js/faker";
 import { createContext, useContext, useState } from "react";
 
+const PostContext = createContext();
+
 function createRandomPost() {
   return {
     title: `${faker.hacker.adjective()} ${faker.hacker.noun()}`,
     body: faker.hacker.phrase(),
   };
 }
-const PostContext = createContext();
 
 function PostProvider({ children }) {
   const [posts, setPosts] = useState(() =>
@@ -41,6 +42,7 @@ function PostProvider({ children }) {
         setSearchQuery,
       }}
     >
+      {/* This is where we input all the components in the App.js */}
       {children}
     </PostContext.Provider>
   );
