@@ -4895,3 +4895,26 @@ function Results() {
   return <p>🚀 {posts.length} atomic posts found</p>;
 }
 ```
+
+---
+
+# 226. **Thinking In React: Advanced State Management**
+
+---
+
+1: State Accesibility:
+
+- **Local state:** Needed only by one or few components
+- Only accessible in component and child components.
+
+- **Global state**: Might be needed by many components
+- Accessible to every component in the application
+
+2: State domain:
+
+- **Remote State**: All application data loaded from the server (API). Usually async, Needs re-fetching + updating
+- **UI State**: Everything else, theme, list filters, form data etc. Usually sync and stored in the app.
+
+## ![alt text](image-30.png)
+
+---
