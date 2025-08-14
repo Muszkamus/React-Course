@@ -1,40 +1,40 @@
 {
   "cities": [
     {
-      "cityName": "Lisbon",
-      "country": "Portugal",
-      "emoji": "🇵🇹",
-      "date": "2027-10-31T15:59:59.138Z",
-      "notes": "My favorite city so far!",
-      "position": {
-        "lat": 38.727881642324164,
-        "lng": -9.140900099907554
-      },
-      "id": 73930385
-    },
-    {
-      "cityName": "Madrid",
-      "country": "Spain",
-      "emoji": "🇪🇸",
-      "date": "2027-07-15T08:22:53.976Z",
+      "id": "3c10",
+      "cityName": "London",
+      "country": "United Kingdom of Great Britain and Northern Ireland (the)",
+      "emoji": "🇬🇧",
+      "date": "2025-08-14T22:42:48.247Z",
       "notes": "",
       "position": {
-        "lat": 40.46635901755316,
-        "lng": -3.7133789062500004
-      },
-      "id": 17806751
+        "lat": "51.50008749807709",
+        "lng": "-0.009613037109375002"
+      }
     },
     {
-      "cityName": "Berlin",
-      "country": "Germany",
-      "emoji": "🇩🇪",
-      "date": "2027-02-12T09:24:11.863Z",
-      "notes": "Amazing 😃",
+      "id": "d3b4",
+      "cityName": "Schorbach",
+      "country": "France",
+      "emoji": "🇫🇷",
+      "date": "2025-08-14T22:42:52.591Z",
+      "notes": "",
       "position": {
-        "lat": 52.53586782505711,
-        "lng": 13.376933665713324
-      },
-      "id": 98443197
+        "lat": "49.095452162534826",
+        "lng": "7.382812500000001"
+      }
+    },
+    {
+      "id": "b1a4",
+      "cityName": "La Solana",
+      "country": "Spain",
+      "emoji": "🇪🇸",
+      "date": "2025-08-14T22:42:55.745Z",
+      "notes": "",
+      "position": {
+        "lat": "38.95940879245423",
+        "lng": "-3.251953125"
+      }
     }
   ]
 }
