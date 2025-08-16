@@ -4583,7 +4583,6 @@ export default function App() {
 
 3. ```bash
    npm run dev
-
    ```
 
 4. **Configuring ESLint in Vite**
@@ -4624,9 +4623,7 @@ Open a new terminal so that we do not have to finish the current process. Instal
 
 bash Code Sample
 
-```bash
 npm install react-router-dom@6
-```
 
 If you just install react-router-dom, it will install the latest version, which is fine for your own apps. For this project, we want to make sure we are using version 6 so that your code will work exactly the same way as mine.
 
@@ -4666,7 +4663,7 @@ return (
           index: Means this route is the default route for its parent path ("/").
           element: The React component to render. */}
       <Route index element={<Homepage />} /> {/* Default page at "/" */}
-      {/* Nested Route example: 
+      {/* Nested Route example:
           path="app": Base path for all nested routes under "/app".
           element={<AppLayout />}: The layout/wrapper for all child routes.
           Any <Outlet /> inside AppLayout will display nested route components. */}
@@ -4710,6 +4707,8 @@ return (
 );
 ```
 
+````
+
 2. We need to set up Link/NavLink inside these components so we can switch urls.
 
 - Link – Navigates to another route without full page reload (SPA behaviour).
@@ -4751,6 +4750,10 @@ function PageNav() {
     </nav>
   );
 }
+````
+
+```
+
 ```
 
 3. Inside any component, we can navigate to go next page or previous page eg. >
@@ -4798,7 +4801,7 @@ function CityItem({ city }) {
 ```js
 const { id } = useParams();
 {
-  /* useParams is anything that comes after : from 
+  /* useParams is anything that comes after : from
     <Route path="cities/:id" element={<City />} /> */
 }
 
@@ -4916,5 +4919,37 @@ function Results() {
 - **UI State**: Everything else, theme, list filters, form data etc. Usually sync and stored in the app.
 
 ## ![alt text](image-30.png)
+
+---
+
+# <centre> **Section 19: Performance Optimization and Advanced useEffect**
+
+---
+
+# 243. **Performance Optimization and Wasted Renders**
+
+---
+
+1: Prevent Wasted Renders
+
+- memo
+
+```js
+useMemo();
+useCallback();
+```
+
+- passing elements as children or regular prop
+
+2: Improve App Speed/Responsiveness
+
+```js
+useMemo(), useCallBack(), useTransition();
+```
+
+3: Reduce Bundle Size
+
+- Using fewer 3rd party packages
+- Code splitting and lazy loading
 
 ---
