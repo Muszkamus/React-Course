@@ -17,7 +17,6 @@ function CityItem({ city }) {
     e.preventDefault();
     console.log(`Deleting: ${id}`);
     deleteCity(id);
-    console.log("TEST");
   }
   return (
     <li>

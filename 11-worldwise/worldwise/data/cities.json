@@ -1,3 +1,40 @@
 {
-  "cities": []
+  "cities": [
+    {
+      "id": "fdd0",
+      "cityName": "London",
+      "country": "United Kingdom of Great Britain and Northern Ireland (the)",
+      "emoji": "🇬🇧",
+      "date": "2025-08-16T11:02:29.911Z",
+      "notes": "",
+      "position": {
+        "lat": "51.49303409238195",
+        "lng": "-0.013904571533203125"
+      }
+    },
+    {
+      "id": "a822",
+      "cityName": "London",
+      "country": "United Kingdom of Great Britain and Northern Ireland (the)",
+      "emoji": "🇬🇧",
+      "date": "2025-08-16T11:02:31.999Z",
+      "notes": "",
+      "position": {
+        "lat": "51.50030122060505",
+        "lng": "-0.016479492187500003"
+      }
+    },
+    {
+      "id": "5bb3",
+      "cityName": "Sunderland",
+      "country": "United Kingdom of Great Britain and Northern Ireland (the)",
+      "emoji": "🇬🇧",
+      "date": "2025-08-16T11:02:41.423Z",
+      "notes": "",
+      "position": {
+        "lat": "54.87660665410869",
+        "lng": "-1.5380859375000002"
+      }
+    }
+  ]
 }
