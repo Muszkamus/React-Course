@@ -5035,6 +5035,132 @@ memo function:
 
 ---
 
-# 247. **memo in Practice**
+# 248. **Understanding useMemo and useCallback**
 
 ---
+
+### useMemo AND useCallback
+
+1: Used to memoize values (useMemo) and function (useCallback) between renders
+2: Values passed into useMemo and useCallback will be stored in memory ("cached") and returned in subsequent re-renders, as long as dependiencies ("inputs") stay the same
+3: useMemo and useCallback have the dependency array (like useEffect): whenever one dependency changes, the value will be re-created.
+
+---
+
+# 249. **useMemo in Practice**
+
+usually used for data (Objects)
+
+---
+
+```js
+const archiveOptions = useMemo(() => {
+  return {
+    // return objects
+    show: false,
+    title: `Post archive in addition to ${posts.length} main posts,`,
+  };
+}, [posts.length]); // dependancy array, just like useEffect
+```
+
+---
+
+# 250. **useCallback in Practice**
+
+---
+
+Usually used for functions that slow apps down
+
+```js
+const handleAddPost = useCallback(function handleAddPost(post) {
+  setPosts((posts) => [post, ...posts]);
+}, []); // no need to modify dependency array
+```
+
+---
+
+# **251. Optimizing Context Re-Renders**
+
+---
+
+it's actually very important to understand that you only need to optimize your context if three things are true at the same time:
+
+1: the state in the context needs to change all the time.
+2: the context has many consumers.
+3: and probably most importantly, the app is actually slow and laggy.
+So only if all of these are true is it time to optimize context.
+
+---
+
+# 253. **Optimizing Bundle Size With Code Splitting**
+
+---
+
+```js
+// import Homepage from "./pages/Homepage";
+// import Product from "./pages/Product";
+// import Pricing from "./pages/Pricing";
+// import AppLayout from "./pages/AppLayout";
+// import PageNotFound from "./pages/PageNotFound";
+// import Login from "./pages/Login";
+
+import { lazy, Suspense } from "react";
+
+const Homepage = lazy(() => import("./pages/Homepage"));
+const Product = lazy(() => import("./pages/Product"));
+const Pricing = lazy(() => import("./pages/Pricing"));
+const AppLayout = lazy(() => import("./pages/AppLayout"));
+const PageNotFound = lazy(() => import("./pages/PageNotFound"));
+const Login = lazy(() => import("./pages/Login"));
+
+<AuthProvider>
+  <CitiesProvider>
+    <BrowserRouter>
+      // Always Below BrowserRouter
+      <Suspense fallback={<SpinnerFullPage />}>
+        {" "}
+        //Fallback is what happens between renders
+        <Routes>
+          <Route index element={<Homepage />} />
+          <Route path="pricing" element={<Pricing />} />
+          <Route path="product" element={<Product />} />
+          <Route path="login" element={<Login />} />
+          <Route
+            path="app"
+            element={
+              <ProtectedRoute>
+                <AppLayout />{" "}
+              </ProtectedRoute>
+            }
+          >
+            <Route path="cities" element={<CityList />} />
+            <Route path="cities/:id" element={<City />} />
+            <Route
+              path="countries"
+              element={
+                <p>
+                  <CountryList />
+                </p>
+              }
+            />
+            <Route path="form" element={<Form />} />
+          </Route>
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
+  </CitiesProvider>
+</AuthProvider>;
+```
+
+---
+
+# 255. **useEffect Rules and Best Practices**
+
+---
+
+![alt text](image-31.png)
+
+![alt text](image-32.png)
+
+![alt text](image-33.png)
