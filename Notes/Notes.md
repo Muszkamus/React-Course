@@ -4953,3 +4953,88 @@ useMemo(), useCallBack(), useTransition();
 - Code splitting and lazy loading
 
 ---
+
+# 245. **A Surprising Optimization Trick With children**
+
+---
+
+### Version 1 (Counter inside Test)
+
+```js
+export default function Test() {
+  const [count, setCount] = useState(0); // state is here
+  return (
+    <div>
+      <h1>Slow counter?!?</h1>
+      <button onClick={() => setCount((c) => c + 1)}>Increase: {count}</button>
+      <SlowComponent /> {/* always re-renders when Test re-renders */}
+    </div>
+  );
+}
+```
+
+State location: count is in Test.
+
+Re-renders: Every time count changes, the whole Test function re-runs → both the button and SlowComponent re-render.
+
+Problem: If SlowComponent is expensive (slow), clicking the button feels laggy.
+
+### Version 2 (Counter component)
+
+```js
+function Counter({ children }) {
+  const [count, setCount] = useState(0); // state is here now
+  return (
+    <div>
+      <h1>Slow counter?!?</h1>
+      <button onClick={() => setCount((c) => c + 1)}>Increase: {count}</button>
+      {children}
+    </div>
+  );
+}
+
+export default function Test() {
+  return (
+    <div>
+      <Counter>
+        <SlowComponent /> {/* passed as children */}
+      </Counter>
+    </div>
+  );
+}
+```
+
+State location: count is inside Counter.
+
+Re-renders: When count changes, React re-runs Counter → the children (SlowComponent) will also re-render because it’s rendered inside Counter’s JSX.
+
+Difference: Test itself doesn’t re-render anymore (since its state is gone). Only Counter does.
+
+So what’s the real difference?
+
+In v1: The parent (Test) re-renders, so everything inside it re-renders.
+
+In v2: Only Counter re-renders, but because SlowComponent is a child of Counter, it still re-renders too.
+
+Net effect: Both versions still re-render SlowComponent on every count update — no real performance gain yet.
+
+---
+
+# 246. **Understanding memo**
+
+---
+
+What is Memoization?
+
+- Optimization technique that executes a pure function once, and saves the result in memory. IF we try to execute function again with the same arguments as before, the previously saved result will be returned, without executing the function again.
+
+memo function:
+1: Used to create a component that will not re=render when it's parent re-renders, as long as the props stay the same between renders.
+2: Only affects props! A memoized component will still re-render when it's own state changes or when a context that it's subscribed to changes.
+3: Only makes sense when the component is heavy (slow rendering), re-renders often and does so with the same props.
+
+---
+
+# 247. **memo in Practice**
+
+---
