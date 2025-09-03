@@ -5164,3 +5164,21 @@ const Login = lazy(() => import("./pages/Login"));
 ![alt text](image-32.png)
 
 ![alt text](image-33.png)
+
+---
+
+# Section 20: **Redux and Modern Redux Toolkit (With Thunks)**
+
+---
+
+# 261. **Introduction to Redux**
+
+---
+
+### Redux
+
+- 3rd-party library to manage global state
+- Standalone library, but easy to integrate with React apps using react-redux library
+- All global state is stored in one globally accessible store, which is easy to update using "actions" (like useReducer)
+
+---
