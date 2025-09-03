@@ -14,18 +14,20 @@ function AccountOperations() {
   const {
     loan: currentLoan,
     loanPurpose: currentLoanPurpose,
-    balance,
+    // balance,
     isLoading,
   } = useSelector((store) => store.account);
   function handleDeposit() {
     if (!depositAmount) return;
-    dispatch(deposit(depositAmount, currency));
+    // dispatch(deposit(depositAmount, currency));
+
+    dispatch(deposit(depositAmount));
     setDepositAmount("");
-    setCurrency("");
+    setCurrency("USD");
   }
 
   function handleWithdrawal() {
-    if (!withdrawalAmount || !loanPurpose) return;
+    if (!withdrawalAmount) return;
     dispatch(withdraw(withdrawalAmount));
     setWithdrawalAmount("");
   }
