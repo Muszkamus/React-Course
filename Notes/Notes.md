@@ -5182,3 +5182,34 @@ const Login = lazy(() => import("./pages/Login"));
 - All global state is stored in one globally accessible store, which is easy to update using "actions" (like useReducer)
 
 ---
+
+# 278. **Redux vs. Context API**
+
+---
+
+![alt text](image-35.png)
+
+![alt text](image-34.png)
+
+---
+
+# <centre> Section 22: **React Router With Data Loading (v6.4+)**
+
+---
+
+# 283. **Application Planning**
+
+---
+
+1: Gather application requirements and features
+2: Divide the application into pages
+
+- This about the overall and page-level UI
+- Break the desired UI into components
+- Design and build a static version (no state yet)
+
+3: Divide the application into feature categories
+
+- Think about state management + data flow
+
+4: Decide on what libaries to use (technology decisions)
