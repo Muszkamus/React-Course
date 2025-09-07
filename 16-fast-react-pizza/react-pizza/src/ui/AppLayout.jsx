@@ -5,6 +5,7 @@ import Loader from "./Loader";
 
 function AppLayout() {
   const navigation = useNavigation();
+  // below will work in any case becasue API will show "loading". It means Loader will appear anywhere, where API is loading.
   const isLoading = navigation.state === "loading";
   return (
     <div className="layout">
