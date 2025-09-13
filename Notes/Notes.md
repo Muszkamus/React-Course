@@ -5407,3 +5407,139 @@ export default {
 │  └─ components/Home.jsx   # your React components
 
 ```
+
+---
+
+# <centre> Section 24: **Adding Redux and Advanced React Router**
+
+---
+
+# 313. **Modeling the "User" State With Redux Toolkit**
+
+---
+
+1: Create a Slice
+features/user/userSlice.js
+
+```js
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = { username: "" };
+
+const userSlice = createSlice({
+  name: "user",
+  initialState,
+  reducers: {
+    updateName(state, action) {
+      state.username = action.payload;
+    },
+  },
+});
+
+export const { updateName } = userSlice.actions;
+export default userSlice.reducer;
+```
+
+2:
+Configure the Store
+store.js
+
+```js
+import { configureStore } from "@reduxjs/toolkit";
+import userReducer from "./features/user/userSlice";
+
+const store = configureStore({
+  reducer: {
+    user: userReducer, //Kkey must match how you want to access state
+  },
+});
+
+export default store;
+```
+
+3: Provide the Store
+main.jsx
+
+```js
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import "./index.css";
+import { Provider } from "react-redux";
+import store from "./store.js";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>
+);
+```
+
+4: Read from Store
+Username.jsx
+
+```js
+import { useSelector } from "react-redux";
+
+function Username() {
+  const username = useSelector((state) => state.user.username);
+
+  return <div>{username}</div>;
+}
+
+export default Username;
+```
+
+5: Update Store
+
+```js
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { updateName } from "./userSlice"; // 👈 import the action
+import Button from "../../ui/Button";
+
+function CreateUser() {
+  const [username, setUsername] = useState("");
+  const dispatch = useDispatch(); // 👈 get dispatcher
+  const navigate = useNavigate(); // 👈 for navigation
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    if (!username) return;
+
+    // 👇 update Redux state
+    dispatch(updateName(username));
+
+    // 👇 navigate after update
+    navigate("/menu");
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <p className="mb-4 text-sm text-stone-600 md:text-base">
+        👋 Welcome! Please start by telling us your name:
+      </p>
+
+      <input
+        type="text"
+        placeholder="Your full name"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        className="input mb-8 w-72"
+      />
+
+      {username !== "" && (
+        <div>
+          <Button type="primary">Start ordering</Button>
+        </div>
+      )}
+    </form>
+  );
+}
+
+export default CreateUser;
+```
