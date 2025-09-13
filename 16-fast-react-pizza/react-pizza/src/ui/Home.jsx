@@ -1,5 +1,6 @@
 import React from 'react';
 import CreateUser from '../features/user/CreateUser';
+import Button from './Button';
 function Home() {
   return (
     <div className="my-10 mb-10 mt-8 px-4 text-center sm:my-16">

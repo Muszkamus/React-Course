@@ -13,7 +13,7 @@ function AppLayout() {
 
       <Header />
       <div className="overflow-auto">
-        <main className="mx-auto max-w-3xl">
+        <main>
           {/* OUTLET needs to be used in the parent component for routes, in order to render UI */}
           <Outlet />
         </main>
