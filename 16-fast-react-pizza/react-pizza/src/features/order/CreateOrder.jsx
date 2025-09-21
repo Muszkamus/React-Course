@@ -165,7 +165,7 @@ function CreateOrder() {
 }
 
 export async function action({ request }) {
-  store.dispatch(clearCart()); // Do not overuse
+  store.dispatch(clearCart()); // Do not overuse calling store dispatch functions directly outside the store
   const formData = await request.formData();
   const data = Object.fromEntries(formData); // convert the above into an object
 

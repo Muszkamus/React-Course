@@ -5450,7 +5450,7 @@ import userReducer from "./features/user/userSlice";
 
 const store = configureStore({
   reducer: {
-    user: userReducer, //Kkey must match how you want to access state
+    user: userReducer, //Key must match how you want to access state
   },
 });
 
@@ -5542,4 +5542,69 @@ function CreateUser() {
 }
 
 export default CreateUser;
+```
+
+---
+
+# 324. **Fetching Data Without Navigation: useFetcher**
+
+Here, useFetcher is used to fetch menu data in the background without navigating away from the current page, so each cart item can display its ingredients (or a loading state) alongside its name and price — essentially acting as a lightweight data-fetching tool for components that need extra info but don’t control the route.
+
+1:
+
+```js
+const fetcher = useFetcher();
+useEffect(
+  function () {
+    if (!fetcher.data && fetcher.state === "idle") fetcher.load("/menu");
+  },
+  [fetcher]
+);
+```
+
+2:
+
+````js
+ <ul className="divide-y divide-stone-200 border-b">
+        {cart.map((item) => (
+          <OrderItem
+            isLoadingIngredients={fetcher.state === 'loading'}
+            item={item}
+            key={item.pizzaId}
+            ingredients={ // Fetcher logic is applied here to show ingredients
+              fetcher?.data?.find((el) => el.id === item.pizzaId)
+                ?.ingredients ?? []
+            }
+          />
+        ))}
+      </ul>
+      ```
+````
+
+3:
+
+We apply the logic in the component
+
+```js
+import { formatCurrency } from "../../utils/helpers";
+
+function OrderItem({ item, isLoadingIngredients, ingredients }) {
+  const { quantity, name, totalPrice } = item;
+
+  return (
+    <li className="space-y-1 py-3">
+      <div className="flex items-center justify-between gap-4 text-sm">
+        <p>
+          <span className="font-bold">{quantity}&times;</span> {name}
+        </p>
+        <p className="font-bold">{formatCurrency(totalPrice)}</p>
+      </div>
+      <p className="text-sm capitalize italic text-stone-500">
+        {isLoadingIngredients ? "loading..." : ingredients.join(", ")}
+      </p>
+    </li>
+  );
+}
+
+export default OrderItem;
 ```
