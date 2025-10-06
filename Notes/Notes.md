@@ -5608,3 +5608,75 @@ function OrderItem({ item, isLoadingIngredients, ingredients }) {
 
 export default OrderItem;
 ```
+
+---
+
+### Using LocalStorage
+
+---
+
+1️⃣ Purpose
+
+This custom hook saves React state into localStorage, so your data persists after page refresh.
+It behaves exactly like useState, but automatically syncs with the browser’s storage.
+
+2️⃣ The Hook Code
+
+```js
+import { useState, useEffect } from "react";
+
+// Custom React hook to persist state in localStorage
+export function useLocalStorageState(initialState, key) {
+  // Initialize state with either stored value or provided initialState
+  const [value, setValue] = useState(function () {
+    // Try to read the existing value from localStorage
+    const storedValue = localStorage.getItem(key);
+
+    // If found, parse it from JSON → JS object/value
+    // Otherwise, use the provided default (initialState)
+    return storedValue ? JSON.parse(storedValue) : initialState;
+  });
+
+  // Whenever the state (value) or key changes → save to localStorage
+  useEffect(
+    function () {
+      // Convert the state value to JSON string and store it
+      localStorage.setItem(key, JSON.stringify(value));
+    },
+    [value, key] // Runs again only when value or key updates
+  );
+
+  // Return both the value and its setter, like useState does
+  return [value, setValue];
+}
+```
+
+3️⃣ How to Use It
+
+```js
+import { useLocalStorageState } from "./useLocalStorageState";
+
+function App() {
+  // Creates a state variable 'name' that is saved in localStorage under the key "name"
+  const [name, setName] = useLocalStorageState("Radek", "name");
+
+  // 🔹 "Radek" → default value if nothing is stored yet
+  // 🔹 "name"  → the localStorage key used to save/retrieve the value
+  // 🔹 name    → current value (read from state or storage)
+  // 🔹 setName → function to update both the React state AND localStorage
+
+  // Example usage:
+  // setName("Amy"); // updates React state + writes {"name":"Amy"} to localStorage
+
+  return (
+    <div>
+      <input
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Type your name"
+      />
+      <p>Hello, {name}!</p>
+    </div>
+  );
+}
+```
