@@ -5611,7 +5611,7 @@ export default OrderItem;
 
 ---
 
-### Using LocalStorage
+# Using LocalStorage
 
 ---
 
@@ -5680,3 +5680,289 @@ function App() {
   );
 }
 ```
+
+---
+
+# Section 25: **Setting Up Our Biggest Project + Styled Components**
+
+---
+
+# 327. **Application Planning**
+
+---
+
+Client-Side Rendering (CSR) or Server-Side Rendering (SSR)
+
+**CSR with React >**
+Used to build SPA
+All HTML is rendered on the client
+All JS needs to be downloaded before apps start running: bad for performance
+One perfect use case: Apps that are used "internally
+as tools inside companies, that are entirely hidden behind a login.
+
+**SSR With Framework**
+Used to build Multi-Page Applications
+Some HTML is rendered in the server
+More performant, as less JS needs to be downloaded.
+The React team is moving more and more in this direction
+
+Tech Stack for app >
+
+1. Routing > React Router > The standard for React SPAs
+2. Styling > Styled Components > Very popular way of writing component-scoped CSS.
+3. Remote state management > React Query > The best way of managing remote state, with features like caching,automatic re-fetching, pre-fetching, offline support, etc.
+4. UI State Management > Context API > There is almost no UI state needed in this app, so one simple context with useState will be enough, no need for Redux.
+5. Form Management > React Hook Form > HAndling bigger forms can be a lot of work, such as manual state creation and error handling. A library can simplify all this.
+
+---
+
+# 329. **Introduction to Styled Component**
+
+---
+
+```js
+import styled from "styled-components"; // Import styled-components library
+
+// Styled <h1> element
+const H1 = styled.h1`
+  font-size: 30px; // Set font size
+  font-weight: 300; // Set font weight
+`;
+
+// Styled <button> element
+const Button = styled.button`
+  font-size: 1.4rem; // Font size in rem units
+  padding: 1.2rem 1.6rem; // Top/bottom and left/right padding
+  font-weight: 500; // Medium text weight
+  border: none; // Remove default border
+  border-radius: 7px; // Rounded corners
+  background-color: purple; // Button background
+  color: white; // Text color
+  cursor: pointer; // Pointer cursor on hover
+  margin: 20px; // Spacing around button
+`;
+
+// Styled <input> element
+const Input = styled.input`
+  border: 1px solid #ddd; // Light gray border
+  border-radius: 5px; // Slightly rounded corners
+  padding: 0.8rem 1.2rem; // Internal spacing
+`;
+
+function App() {
+  return (
+    <div>
+      {/* Heading */}
+      <H1>The Wild Oasis</H1>
+
+      {/* Buttons */}
+      <Button>Check In</Button>
+      <Button>Check Out</Button>
+
+      {/* Input field */}
+      <Input type="number" placeholder="number of guests" />
+    </div>
+  );
+}
+
+export default App; // Export the component so it can be used elsewhere
+```
+
+---
+
+# 330. **Global Styles With Styled Components**
+
+---
+
+var(--...) means these values come from CSS custom properties — usually defined globally (e.g., in :root { ... } or GlobalStyles).
+
+The &:hover syntax works exactly like SCSS or CSS — the & refers to the current component.
+
+You can easily extend this later for variants (e.g., primary, secondary) with props:
+
+```js
+const Button = styled.button`
+  font-size: 1.4rem;
+  padding: 1.2rem 1.6rem;
+  font-weight: 500;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-brand-600);
+  color: var(--color-brand-50);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-brand-700);
+  }
+`;
+
+export default Button;
+```
+
+---
+
+# 331. **Styled Component Props and the "css" Function**
+
+---
+
+```js
+import styled, { css } from "styled-components";
+// `styled` creates styled elements, `css` lets you define reusable chunks of CSS
+
+const test = css`
+  text-align: center;
+  ${10 > 5 && "background-color: yellow"}
+`;
+// ✅ 10 > 5 is true → expression inserts "background-color: yellow"
+
+const Heading = styled.h1`
+  font-size: 20px;
+  font-weight: 600;
+  ${test}
+`;
+
+export default Heading;
+```
+
+```js
+import styled, { css } from "styled-components"; // Import styled-components and its css helper
+
+// Styled heading component that adapts its behavior and appearance
+// depending on which HTML tag it renders as (via the "as" prop)
+const Heading = styled.h1`
+  /* 
+    props.as comes from React props. 
+    The "as" prop is a special styled-components feature that changes 
+    the underlying HTML tag — e.g. <h1>, <h2>, or <h3>.
+    It doesn’t just affect semantics; we can also use it to change styles conditionally.
+  */
+
+  /* When the component is rendered as <h1> */
+  ${(props) =>
+    props.as === "h1" &&
+    css`
+      font-size: 3rem; // Large text for main title
+      font-weight: 600; // Bold emphasis
+    `}
+
+  /* When the component is rendered as <h2> */
+  ${(props) =>
+    props.as === "h2" &&
+    css`
+      font-size: 2rem; // Medium text for section heading
+      font-weight: 600; // Keep strong visual weight
+    `}
+
+  /* When the component is rendered as <h3> */
+  ${(props) =>
+    props.as === "h3" &&
+    css`
+      font-size: 2rem; // Slightly smaller subtitle or section label
+      font-weight: 500; // Slightly lighter for hierarchy clarity
+    `}
+`;
+
+export default Heading; // Export the styled Heading component
+```
+
+/\*
+USAGE EXAMPLES:
+
+```js
+<Heading as="h1">Main Title</Heading> → Renders <h1> with large bold style
+<Heading as="h2">Subsection</Heading> → Renders <h2> with medium style
+<Heading as="h3">Form Section</Heading> → Renders <h3> with lighter weight
+```
+
+✔ "as" changes the HTML tag rendered
+✔ "props.as" inside styled-components lets you react to that change
+✔ The CSS changes dynamically based on which heading level you choose
+\*/
+
+---
+
+# 332. **Building More Reusable Styled Components**
+
+---
+
+```js
+import styled, { css } from "styled-components";
+
+const sizes = {
+  small: css`
+    font-size: 1.2rem;
+    padding: 0.4rem 0.8rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-align: center;
+  `,
+  medium: css`
+    font-size: 1.4rem;
+    padding: 1.2rem 1.6rem;
+    font-weight: 500;
+  `,
+  large: css`
+    font-size: 1.6rem;
+    padding: 1.2rem 2.4rem;
+    font-weight: 500;
+  `,
+};
+
+const variations = {
+  primary: css`
+    color: var(--color-brand-50);
+    background-color: var(--color-brand-600);
+
+    &:hover {
+      background-color: var(--color-brand-700);
+    }
+  `,
+  secondary: css`
+    color: var(--color-grey-600);
+    background: var(--color-grey-0);
+    border: 1px solid var(--color-grey-200);
+
+    &:hover {
+      background-color: var(--color-grey-50);
+    }
+  `,
+  danger: css`
+    color: var(--color-red-100);
+    background-color: var(--color-red-700);
+
+    &:hover {
+      background-color: var(--color-red-800);
+    }
+  `,
+};
+
+const Button = styled.button`
+  border: none;
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow-sm);
+
+  ${(props) => sizes[props.size]};
+  ${(props) => variations[props.variation]}
+`;
+
+Button.defaultProps = {
+  variation: "primary",
+  size: "medium",
+};
+
+export default Button;
+```
+
+```js
+  <Button variation="primary" size="medium">
+                Check In
+              </Button>
+              <Button variation="primary" size="medium">
+                Check Out
+              </Button>
+```
+
+---
+
+# 333. **Setting Up Pages and Routes**
