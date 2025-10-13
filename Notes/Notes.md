@@ -5609,6 +5609,8 @@ function OrderItem({ item, isLoadingIngredients, ingredients }) {
 export default OrderItem;
 ```
 
+````
+
 ---
 
 # Using LocalStorage
@@ -5649,7 +5651,7 @@ export function useLocalStorageState(initialState, key) {
   // Return both the value and its setter, like useState does
   return [value, setValue];
 }
-```
+````
 
 3️⃣ How to Use It
 
@@ -5966,3 +5968,385 @@ export default Button;
 ---
 
 # 333. **Setting Up Pages and Routes**
+
+---
+
+React Icons and layout
+
+```js
+import { NavLink } from "react-router-dom";
+import styled from "styled-components";
+
+import {
+  HiOutlineCalendarDays,
+  HiOutlineCog6Tooth,
+  HiOutlineHome,
+  HiOutlineHomeModern,
+  HiOutlineUsers,
+} from "react-icons/hi2";
+
+// https://react-icons.github.io/react-icons/icons/fi/
+
+const NavList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+`;
+
+const StyledNavLink = styled(NavLink)`
+  &:link,
+  &:visited {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+
+    color: var(--color-grey-600);
+    font-size: 1.6rem;
+    font-weight: 500;
+    padding: 1.2rem 2.4rem;
+    transition: all 0.3s;
+  }
+
+  /* This works because react-router places the active class on the active NavLink */
+  &:hover,
+  &:active,
+  &.active:link,
+  &.active:visited {
+    color: var(--color-grey-800);
+    background-color: var(--color-grey-50);
+    border-radius: var(--border-radius-sm);
+  }
+
+  & svg {
+    width: 2.4rem;
+    height: 2.4rem;
+    color: var(--color-grey-400);
+    transition: all 0.3s;
+  }
+
+  &:hover svg,
+  &:active svg,
+  &.active:link svg,
+  &.active:visited svg {
+    color: var(--color-brand-600);
+  }
+`;
+
+function MainNav() {
+  return (
+    <nav>
+      <NavList>
+        <li>
+          <StyledNavLink to="/dashboard">
+            <HiOutlineHome />
+            <span>Home</span>
+          </StyledNavLink>
+        </li>
+        <li>
+          <StyledNavLink to="/bookings">
+            <HiOutlineCalendarDays />
+            <span>Bookings</span>
+          </StyledNavLink>
+        </li>
+        <li>
+          <StyledNavLink to="/cabins">
+            <HiOutlineHomeModern />
+            <span>Cabins</span>
+          </StyledNavLink>
+        </li>
+        <li>
+          <StyledNavLink to="/users">
+            <HiOutlineUsers />
+            <span>Users</span>
+          </StyledNavLink>
+        </li>
+        <li>
+          <StyledNavLink to="/settings">
+            <HiOutlineCog6Tooth />
+            <span>Settings</span>
+          </StyledNavLink>
+        </li>
+      </NavList>
+    </nav>
+  );
+}
+
+export default MainNav;
+```
+
+---
+
+# Section 26: **Supabase Crash Course: Building a Back-End!**
+
+---
+
+# 336. **Section Overview**
+
+---
+
+SupaBase-
+1: Service that allows developes to easily create a back-end with a Postgres database
+2: Automatically creates a database and API so we can easily request and receive data from the server
+3: No back0end development needed
+4: Perfect to get up and running quickly
+5: Not just an API: Supabase also comes with easy to-use user authentication and file storage.
+
+---
+
+---
+
+![alt text](image-36.png)
+
+Bookings link a guest to a cabin.
+Each booking record stores:
+
+guestId → foreign key referencing guest.id
+
+cabinId → foreign key referencing cabin.id
+
+This connects guests and cabins in the BOOKING table using foreign keys within a Postgres (SQL) relational database.
+
+---
+
+# 340. **Creating Tables**
+
+---
+
+# 🧾 Bookings Table & Relationships — Notes
+
+## 📘 Table Purpose
+
+The **`bookings`** table stores information about each guest’s stay, including dates, pricing, and booking status.
+
+---
+
+## 🧱 Main Fields
+
+| Field              | Type        | Description                                                 |
+| ------------------ | ----------- | ----------------------------------------------------------- |
+| `start_date`       | `timestamp` | Guest’s arrival date                                        |
+| `end_date`         | `timestamp` | Guest’s departure date                                      |
+| `number_of_nights` | `integer`   | Duration of stay                                            |
+| `number_of_guests` | `integer`   | Total guests in booking                                     |
+| `cabin_price`      | `float`     | Price of cabin only                                         |
+| `extras_price`     | `float`     | Extra costs (e.g., breakfast)                               |
+| `total_price`      | `float`     | Sum of cabin and extras                                     |
+| `status`           | `text`      | Booking status (_unconfirmed_, _checked in_, _checked out_) |
+| `has_breakfast`    | `boolean`   | Whether breakfast is included                               |
+| `has_paid`         | `boolean`   | Whether payment is completed                                |
+| `observations`     | `text`      | Notes such as arrival time or special requests              |
+
+---
+
+## 🔗 Relationships
+
+- `cabin_id` → references **`cabins.id`**
+- `guest_id` → references **`guests.id`**
+
+This connects each booking to one cabin and one guest.
+
+---
+
+## ⚖️ Relationship Logic
+
+- Each **booking** → one **cabin** and one **guest**
+- Each **cabin** / **guest** → many **bookings**
+
+➡️ Therefore, foreign keys **belong in the `bookings` table**.
+
+---
+
+## 🧮 Example Record
+
+| Field              | Example Value                |
+| ------------------ | ---------------------------- |
+| `start_date`       | Monday                       |
+| `end_date`         | Friday                       |
+| `number_of_nights` | 4                            |
+| `number_of_guests` | 2                            |
+| `cabin_price`      | 300                          |
+| `extras_price`     | 120                          |
+| `total_price`      | 420                          |
+| `status`           | unconfirmed                  |
+| `has_breakfast`    | true                         |
+| `has_paid`         | true                         |
+| `observations`     | "Guest arriving at 10:00 PM" |
+| `cabin_id`         | 1                            |
+| `guest_id`         | 1                            |
+
+---
+
+## 🧩 Key Takeaways
+
+- Built a **bookings** table with fields for dates, prices, and status.
+- Linked bookings to **cabins** and **guests** via foreign keys.
+- Understood **foreign key placement**:  
+  → Stored in the table referencing exactly **one** other row (the “many” side).
+- Practiced adding a booking record with related cabin and guest data.
+
+---
+
+# 343. **Connecting Supabase With Our React App**
+
+---
+
+1: We create API key
+
+```js
+import { createClient } from "@supabase/supabase-js";
+const supabaseUrl = "https://jgpyqraladznpecesfsf.supabase.co";
+const supabaseKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpncHlxcmFsYWR6bnBlY2VzZnNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxMDUxMjYsImV4cCI6MjA3NTY4MTEyNn0.imMNRzsbude3H-ZQqb2_iBcvWVCwfvsHTOiH04FO7Jk";
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+export default supabase;
+```
+
+2: Then we fetch the data from the API
+
+```js
+import supabase from "./supabase";
+
+export async function getCabins() {
+  const { data, error } = await supabase.from("cabins").select("*");
+
+  if (error) {
+    console.log(error);
+    throw new Error("Cabins could not be loaded");
+  }
+  return data;
+}
+```
+
+---
+
+![alt text](image-37.png)
+
+---
+
+# Section 27: **React Query: Managing Remote State**
+
+---
+
+# 346. **What is React Query?**
+
+---
+
+1: Powerful library for managing remote (server) state
+2: Many features that allow us to write a lot less code, while also making the UX a lot better.
+
+- Data is stored in cache
+- Automatic loading and error states
+- Automatic re-fetching to keep state synched
+- Pre-fetching
+- Easy remote state mutation (updating)
+- Offline support
+
+---
+
+# 347. **Setting Up React Query**
+
+---
+
+```bash
+npm install @tanstack/react-query@4
+```
+
+Navigate to App.jsx to set up React Query. The integration process is similar to what was done earlier with the Context API or Redux. First, create a place where the data lives, and then provide it to the application. For React Query, set up the cache and the Query client using the QueryClient constructor from @tanstack/react-query.
+
+```js
+import { QueryClient } from "@tanstack/react-query";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000, // The staleTime option specifies the amount of time that the data in the cache will stay fresh before being refetched.
+    },
+  },
+});
+```
+
+### Providing the QueryClient to the Application
+
+With the QueryClient created, provide it to the entire application tree using the QueryClientProvider component. This makes the query data available throughout the component tree.
+
+```js
+import { QueryClientProvider } from "@tanstack/react-query";
+
+<QueryClientProvider client={queryClient}>
+  {/* Application components go here */}
+</QueryClientProvider>;
+```
+
+### Installing React Query Dev Tools
+
+React Query also provides excellent Dev Tools, similar to Redux. These are installed as an npm package, not as a browser extension.
+
+```bash
+npm install @tanstack/react-query-devtools@4
+```
+
+### Integrating React Query Dev Tools
+
+After installing, include the Dev Tools component as the first child of the QueryClientProvider. Set the initialIsOpen prop to false to keep the panel closed by default.
+
+```js
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+<QueryClientProvider client={queryClient}>
+  <ReactQueryDevtools initialIsOpen={false} />
+  {/* Application components go here */}
+</QueryClientProvider>;
+```
+
+---
+
+# **349. Fetching Cabin Data**
+
+---
+
+```js
+import supabase from "./supabase";
+
+export async function getCabins() {
+  const { data, error } = await supabase.from("cabins").select("*");
+
+  if (error) {
+    console.log(error);
+    throw new Error("Cabins could not be loaded");
+  }
+  return data;
+}
+```
+
+```js
+function CabinTable() {
+  const {
+    isLoading,
+    data: cabins,
+    error, // Destructirung "cabin" which is the name of the API object.
+  } = useQuery({
+    queryKey: ["cabin"],
+    queryFn: getCabins, // Imported from the other file
+  });
+
+  if (isLoading) return <Spinner />;
+  return (
+    <Table role="table">
+      <TableHeader role="row">
+        <div></div>
+        <div>Cabin</div>
+        <div>Capacity</div>
+        <div>Price</div>
+        <div>Discount</div>
+        <div></div>
+      </TableHeader>
+      {cabins.map((cabin) => (
+        <CabinRow cabin={cabin} key={cabin.id} />
+      ))}
+    </Table>
+  );
+}
+
+export default CabinTable;
+```
