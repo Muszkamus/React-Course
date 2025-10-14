@@ -6350,3 +6350,13 @@ function CabinTable() {
 
 export default CabinTable;
 ```
+
+---
+
+# 351. **Displaying Toasts: Notifications**
+
+---
+
+```bash
+npm i react-hot-toast
+```

@@ -1,5 +1,8 @@
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
+import { deleteCabin } from "../../services/apiCabins";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const TableRow = styled.div`
   display: grid;
@@ -41,7 +44,31 @@ const Discount = styled.div`
 `;
 
 function CabinRow({ cabin }) {
-  const { name, maxCapacity, regularPrice, discount, image } = cabin;
+  // Destructure cabin object for easier access
+  const {
+    id: cabinId,
+    name,
+    maxCapacity,
+    regularPrice,
+    discount,
+    image,
+  } = cabin;
+
+  // Access React Query's client to manually refetch or update cache
+  const queryClient = useQueryClient();
+
+  // Mutation for deleting a cabin (React Query handles async + cache)
+  const { isLoading: isDeleting, mutate } = useMutation({
+    mutationFn: deleteCabin, // The async function that performs the deletion
+    onSuccess: () => {
+      toast.success("Cabin successfully deleted"); // ✅ Notify user of success
+      queryClient.invalidateQueries({
+        queryKey: ["cabins"], // ✅ Refresh the cabins list after deletion
+      });
+    },
+    onError: (err) => toast.error(err.message), // ✅ Show error message if deletion fails
+  });
+
   return (
     <TableRow role="row">
       <Img src={image} />
@@ -49,7 +76,9 @@ function CabinRow({ cabin }) {
       <div>Fits up to {maxCapacity} guests</div>
       <Price>{formatCurrency(regularPrice)}</Price>
       <Discount>{formatCurrency(discount)}</Discount>
-      <button>Delete</button>
+      <button onClick={() => mutate(cabinId)} disabled={isDeleting}>
+        {isDeleting ? "Deleting..." : "Delete"}
+      </button>
     </TableRow>
   );
 }

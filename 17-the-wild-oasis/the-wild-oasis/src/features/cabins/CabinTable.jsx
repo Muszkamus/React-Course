@@ -29,13 +29,14 @@ const TableHeader = styled.header`
 `;
 
 function CabinTable() {
+  // Fetch cabin data from the API using React Query
   const {
-    isLoading,
-    data: cabins,
-    error,
+    isLoading, // True while data is being fetched
+    data: cabins, // The fetched cabins data (renamed from "data")
+    error, // Contains error info if the fetch fails
   } = useQuery({
-    queryKey: ["cabin"],
-    queryFn: getCabins,
+    queryKey: ["cabins"], // Unique key to identify and cache this query
+    queryFn: getCabins, // Function that performs the actual data fetch
   });
 
   if (isLoading) return <Spinner />;
