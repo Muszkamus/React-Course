@@ -61,12 +61,12 @@ function CabinRow({ cabin }) {
   const { isLoading: isDeleting, mutate } = useMutation({
     mutationFn: deleteCabin, // The async function that performs the deletion
     onSuccess: () => {
-      toast.success("Cabin successfully deleted"); // ✅ Notify user of success
+      toast.success("Cabin successfully deleted"); // Notify user of success
       queryClient.invalidateQueries({
-        queryKey: ["cabins"], // ✅ Refresh the cabins list after deletion
+        queryKey: ["cabins"], // Refresh the cabins list after deletion
       });
     },
-    onError: (err) => toast.error(err.message), // ✅ Show error message if deletion fails
+    onError: (err) => toast.error(err.message), // Show error message if deletion fails
   });
 
   return (
