@@ -6504,3 +6504,72 @@ That’s where **hydration** comes in.
 **In short:**
 
 > Hydration turns static SSR HTML into a live, interactive React app by attaching event handlers and syncing the client-side React tree with the server-rendered DOM.
+
+---
+
+# 419. **What is Next.js?**
+
+---
+
+SSR - Dynamic and static can be selected for each route
+File based routing conventions - Folders as routes. Special files for pages, layouts, loaders etc.
+Data fetching and mutation on the server - Fetching data directly in Server Components. Mutation in Server Actions
+Optimizations - Images, Fonts, SEO, preloading
+
+![alt text](image-39.png)
+
+⚡ Modern Next.js: "App" Router
+
+Introduced in Next.js 13.4 (2023)
+
+Recommended for new projects
+
+Implements React’s full-stack architecture:
+Server Components, Server Actions, Streaming, etc.
+
+👍 Easy fetching with fetch() directly inside components
+
+👍 Extremely easy to create layouts, loaders, etc.
+
+👍 More advanced routing (parallel routing, nested layouts, etc.)
+
+👍 Better DX (Developer Experience) and UX
+
+👎 Caching is very aggressive and can be confusing
+
+👎 Steep learning curve (but it’s React)
+
+🧩 Legacy Next.js: "Pages" Router
+
+The first Next.js router (since v1, 2016)
+
+Still supported and will continue to receive updates
+
+👍 Overall simpler and easier to learn
+
+👎 Simple things like layouts are confusing to implement
+
+👎 Data fetching requires Next.js-specific APIs such as
+getStaticProps and getServerSideProps
+
+---
+
+# 420. **Setting Up a Next.js Project**
+
+---
+
+```bash
+npx create-next-app@latest "project name"
+```
+
+---
+
+---
+
+To update your project to the latest Next.js version, just run this command in your project folder:
+
+```bash
+npm install next@latest react@latest react-dom@latest eslint-config-next@latest
+```
+
+You can also follow the Next.js blog where new versions are announced.

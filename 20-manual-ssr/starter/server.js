@@ -1,12 +1,8 @@
 const { readFileSync } = require("fs");
 const { createServer } = require("http");
 const { parse } = require("url");
-const React = require("react");
-
 const { renderToString } = require("react-dom/server");
-
-// npm i -D @babel/core @babel/preset-env @babel/preset-react @babel/register
-// npm i react react-dom
+const React = require("react");
 
 const pizzas = [
   {
@@ -68,22 +64,71 @@ function MenuItem({ pizza }) {
   );
 }
 
-const htmlTemplate = readFileSync(`${__dirname}/index.html`, "utf8");
+import { createServer } from "http";
+import { readFileSync } from "fs";
+import { parse } from "url";
+import { renderToString } from "react-dom/server";
+import Home from "./Home";
 
+/* ============================================================
+   1️⃣  Load Static Assets
+   ============================================================ 
+   - Read the base HTML template and client-side JS file.
+   - The HTML file contains a placeholder (%%%CONTENT%%%)
+     where the server-rendered React will be injected.
+   ============================================================ */
+const htmlTemplate = readFileSync(`${__dirname}/index.html`, "utf-8");
+const clientJS = readFileSync(`${__dirname}/client.js`, "utf-8");
+
+/* ============================================================
+   2️⃣  Create the HTTP Server
+   ============================================================ 
+   - Handles incoming requests manually (no Express).
+   - Parses the request URL to determine which resource to serve.
+   ============================================================ */
 const server = createServer((req, res) => {
-  const pathname = parse(req.url, true).pathname; //
+  const pathName = parse(req.url, true).pathname;
 
-  if (pathname === "/") {
-    const renderedReact = renderToString(<Home />);
+  /* ============================================================
+     Route 1 — Serve the Home Page (Server-Side Rendered)
+     ============================================================ 
+     1. Render the <Home /> React component on the server using
+        renderToString() to generate HTML markup.
+     2. Replace the placeholder (%%%CONTENT%%%) in the HTML template
+        with the rendered HTML.
+     3. Send the final HTML page to the browser.
+     ============================================================ */
+  if (pathName === "/") {
+    const renderedReact = renderToString(<Home />); // Server renders React → HTML
+    const html = htmlTemplate.replace("%%%CONTENT%%%", renderedReact);
 
-    const html = htmlTemplate.replace("$$$Content%%%%", renderedReact);
-    res.writeHead(200, { "content-type": "text/html" });
+    res.writeHead(200, { "Content-type": "text/html" });
     res.end(html);
-  } else if (pathname === "/test") {
-    res.end("Test");
+  } else if (pathName === "/client.js") {
+    /* ============================================================
+     Route 2 — Serve the Client-Side JavaScript
+     ============================================================ 
+     - This JS bundle runs in the browser.
+     - It hydrates (attaches) React to the already rendered HTML.
+     - Example: hydrateRoot(document.getElementById("root"), <Home />)
+     ============================================================ */
+    res.writeHead(200, { "Content-type": "application/javascript" });
+    res.end(clientJS);
   } else {
+    /* ============================================================
+     Route 3 — Unknown Path (Fallback)
+     ============================================================ 
+     - Any other URL returns a simple text response.
+     ============================================================ */
+    res.writeHead(404, { "Content-type": "text/plain" });
     res.end("The URL cannot be found");
   }
 });
 
+/* ============================================================
+   3️⃣  Start the Server
+   ============================================================ 
+   - Listens for incoming requests on port 8000.
+   - Visit http://localhost:8000 to see the rendered React app.
+   ============================================================ */
 server.listen(8000, () => console.log("Listening for requests on port 8000"));
