@@ -6573,3 +6573,176 @@ npm install next@latest react@latest react-dom@latest eslint-config-next@latest
 ```
 
 You can also follow the Next.js blog where new versions are announced.
+
+---
+
+# 425. **What are React Server Components? (RSC – Part 1)**
+
+---
+
+1: A new full-stack architecture for React Apps
+2: Introduces the server as an integral part of React component trees :server components
+
+Client Components
+1: Regular Components
+
+Server Components
+1: Components that are only renderd on the server
+2: Don't make it into the bundle (0kb)
+3: We can build the back-end with React!
+4: Default in apps that use RSC architecture (like Next.js)
+
+Server-client boundary:
+
+Server–client boundary refers to the separation between code that runs on the server and code that runs in the user’s browser (client).
+
+🖥️ Server side: Handles data fetching, database access, authentication, rendering HTML, etc.
+
+💻 Client side: Handles interactivity, UI updates, and user actions after the page loads.
+
+In frameworks like Next.js (App Router), this boundary is explicit — for example:
+
+Server Components run only on the server (can access DB, APIs, secrets).
+
+Client Components run in the browser (can use useState, useEffect, event handlers).
+
+![alt text](image-40.png)
+
+| **Feature**          | **🟦 Client Components (`"use client"`)**                                  | **🟨 Server Components (default)**                                                         |
+| -------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| **State / Hooks**    | ✅ Yes                                                                     | ❌ No                                                                                      |
+| **Lifting State Up** | ✅ Yes                                                                     | ❌ N/A                                                                                     |
+| **Props**            | ✅ Yes                                                                     | ✅ Yes _(must be serializable when passed to client components — no functions or classes)_ |
+| **Data Fetching**    | 🧩 Possible (preferably using a library like SWR or React Query)           | ✅ Preferred — use `async/await` directly in the component                                 |
+| **Can Import**       | Only **client components** (cannot import server components)               | Can import both **client and server components**                                           |
+| **Can Render**       | Can render **client components** and **server components** passed as props | Can render **client** and **server components**                                            |
+| **When Re-render?**  | On **state change**                                                        | On **URL change (navigation)**                                                             |
+
+### Differences
+
+| 🟢 **The Good**                                                                                                             | 🔴 **The Bad**                                                                                                 |
+| --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| 👍 We can compose entire full-stack apps with **React components alone** (+ **Server Actions**)                             | 👎 Makes React **more complex**                                                                                |
+| 👍 **One single codebase** for front-end and back-end                                                                       | 👎 **More things to learn and understand**                                                                     |
+| 👍 Server components have **more direct and secure access** to data sources (no API, no exposed API keys)                   | 👎 Features like **Context API** don’t work in server components                                               |
+| 👍 **Eliminate client-server waterfalls** by fetching all required data for a page **at once** before sending to the client | 👎 **More decisions to make:** “Should this be a client or server component?”, “Where should data be fetched?” |
+| 👍 “**Disappearing code**”: server components ship **no JS**, so they can import large libraries _for free_                 | 👎 Sometimes you still need to **build an API** (e.g. if you also have a mobile app)                           |
+|                                                                                                                             | 👎 Can only be used **within a framework** (e.g. Next.js)                                                      |
+
+---
+
+# 429. **How RSC Works Behind the Scenes (RSC – Part 2)**
+
+---
+
+## ![alt text](image-41.png)
+
+---
+
+# 430. **RSC vs. SSR: How are They Related? (RSC – Part 3)**
+
+---
+
+![alt text](image-42.png)
+
+## 🧩 The Relationship Between RSC and SSR (Simple Explanation)
+
+### 🔹 SSR (Server-Side Rendering)
+
+- The **server** builds the full HTML of the page.
+- The browser receives that HTML and shows it instantly.
+- Then React **hydrates** it (adds interactivity).
+- Needs a **running server** to render pages for each request.
+
+---
+
+### 🔹 RSC (React Server Components)
+
+- Runs on the **developer’s or build server**, not necessarily a live web server.
+- It **pre-renders parts of the app** (like static content or data) before sending to the client.
+- The result is a “payload” that React uses to rebuild the page.
+- RSC doesn’t replace SSR — they **work together**.
+
+---
+
+### 🔹 How They Work Together (Next.js Example)
+
+1. **RSC** pre-renders both server and client components.
+2. **SSR** sends that pre-rendered HTML to the browser.
+3. The browser then **hydrates** it — making the page interactive.
+
+---
+
+### 🧠 Summary
+
+| Term         | What it does                      | Needs live server? |
+| ------------ | --------------------------------- | ------------------ |
+| **SSR**      | Sends ready HTML to browser       | ✅ Yes             |
+| **RSC**      | Builds parts of app ahead of time | ❌ No              |
+| **Together** | Fast + interactive React apps     | 🚀 Ideal combo     |
+
+## Easy version
+
+### 1️⃣ Server starts the work
+
+- The **server** looks at all your React components.
+- Some are **Server Components (SC)** — they can run server code, access databases, etc.
+- Others are **Client Components (CC)** — they need the browser for things like `useState`, `onClick`, etc.
+
+---
+
+### 2️⃣ Server renders Server Components first
+
+- React runs all **Server Components** on the server.
+- It builds a “virtual DOM” that includes placeholders for Client Components.
+- It sends this as a special **RSC payload** (a lightweight JSON-like structure).
+
+---
+
+### 3️⃣ Browser (client) takes over
+
+- The browser receives that **payload** and reconstructs the full React tree —  
+  now including both **Server** and **Client** parts.
+
+---
+
+### 4️⃣ SSR turns it into HTML
+
+- Next.js uses **Server-Side Rendering (SSR)** to turn that React tree into **real HTML**.
+- That HTML is sent to the user’s browser immediately → super fast first paint.
+
+---
+
+### 5️⃣ Hydration
+
+- The browser loads the React JS bundle and runs **hydration**,  
+  which attaches interactivity (event handlers, state, etc.) to the already rendered HTML.
+
+---
+
+### 6️⃣ Interactive React App
+
+- Now the page behaves like a normal React app —  
+  buttons work, components update, state changes, etc.
+
+---
+
+### 🧠 Simple summary
+
+| Step | What happens                             | Who does it |
+| ---- | ---------------------------------------- | ----------- |
+| 1    | Server reads components                  | 🖥️ Server   |
+| 2    | Renders server components, sends payload | 🖥️ Server   |
+| 3    | Browser reconstructs everything          | 🌐 Client   |
+| 4    | SSR sends real HTML to browser           | 🖥️ Server   |
+| 5    | Hydration makes it interactive           | 🌐 Client   |
+| 6    | User interacts normally                  | 👤 User     |
+
+---
+
+### 🚀 TL;DR
+
+> The server builds the page → sends it to the browser →  
+> browser hydrates it → page becomes fully interactive.
+
+---

@@ -1,3 +1,7 @@
 export default function page() {
-  return <div>About The Wild Oasis</div>;
+  return (
+    <div>
+      <h1>About The Wild Oasis</h1>
+    </div>
+  );
 }
