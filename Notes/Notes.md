@@ -6746,3 +6746,19 @@ Client Components run in the browser (can use useState, useEffect, event handler
 > browser hydrates it → page becomes fully interactive.
 
 ---
+
+# Section 33: **Starting to Build the "Wild Oasis" Website**
+
+---
+
+### Preferred Approach: Dedicated Components Folder
+
+The best option is to have a dedicated components folder that holds all reusable UI logic. This keeps the project organized and consistent.
+
+### Issue with Components Folder Routing
+
+One problem is that the components folder will create a new route in Next.js, just like other folders. There is no convention in Next.js that prevents this, so a folder named components will be treated as a route. For example, if there is a secret component named page inside components, navigating to /components would render that component, potentially leaking private components.
+
+### Solution: Private Folders with Underscore Prefix
+
+Next.js supports a convention where folder names starting with an underscore (\_) are private and excluded from routing. By renaming the components folder to \_components, no route will be created for it, preventing accidental exposure of private components.
